@@ -1,9 +1,6 @@
 #ifndef __MYALGO1_H
 #define __MYALGO1_H
 
-#include <iostream>
-#include <algorithm>
-#include <utility>
 #include "../AlgorithmBase/AlgorithmBase.h"
 #include "../../Network/Graph/Graph.h"
 #include "../../config.h"

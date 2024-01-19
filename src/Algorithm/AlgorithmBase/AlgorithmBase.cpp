@@ -1,7 +1,7 @@
 #include "AlgorithmBase.h"
 
-AlgorithmBase::AlgorithmBase(Graph graph, vector<pair<int, int>> requests):
-    graph(graph), requests(requests) {
+AlgorithmBase::AlgorithmBase(Graph graph, vector<SDpair> requests, map<SDpair, vector<Path>> paths):
+    graph(graph), requests(requests), paths(paths) {
     time_limit = graph.get_time_limit();
     A = graph.get_A();
     B = graph.get_B();
@@ -11,16 +11,16 @@ AlgorithmBase::AlgorithmBase(Graph graph, vector<pair<int, int>> requests):
 
     vector<bool> passed_node(graph.get_num_nodes(), false);
     memory_total = 0;
-    for(int i = 0; i < (int)requests.size(); i++) {
-        int src = requests[i].first, dst = requests[i].second;
-        vector<int> path = graph.get_path(src, dst);
-        for(auto node : path) {
-            if(!passed_node[node]) {
-                passed_node[node] = true;
-                memory_total += graph.get_node_memory(node);
-            }
-        }
-    }
+    // for(int i = 0; i < (int)requests.size(); i++) {
+    //     int src = requests[i].first, dst = requests[i].second;
+    //     vector<Path> path = graph.get_path(src, dst);
+    //     for(auto node : path) {
+    //         if(!passed_node[node]) {
+    //             passed_node[node] = true;
+    //             memory_total += graph.get_node_memory(node);
+    //         }
+    //     }
+    // }
 
     memory_total *= graph.get_time_limit();
     request_cnt = requests.size();
@@ -80,4 +80,8 @@ void AlgorithmBase::update_res() {
     for(int i = 1; i < (int)boundary.size(); i++) {
         cdf[i] = cdf[i - 1] + cnt[i];
     }
+}
+
+vector<Path> AlgorithmBase::get_paths(int src, int dst) {
+    return paths[{src, dst}];
 }

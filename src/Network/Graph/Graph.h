@@ -1,39 +1,37 @@
 #ifndef __GRAPH_H
 #define __GRAPH_H
 
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <queue>
-#include <set>
-#include <map>
-#include <random>
-#include <functional>
-#include <cassert>
-#include <ctime>
-#include <algorithm>
 #include "../Node/Node.h"
 #include "../Shape/Shape.h"
 #include "../../config.h"
 
 using namespace std;
+using Path = vector<int>;
+using SDpair = pair<int, int>;
+
 
 class Graph {
     int num_nodes;
     int time_limit;
+    double fidelity_threshold;
     double A, B, n, T, tao;
     double fidelity_gain;
+    double swapping_succ_prob;
     int usage;
     int succ_request_cnt;
     vector<Node> nodes;
-    vector<vector<int>> adj_list;
-    vector<set<int>> adj_set;
+
     vector<double> boundary, cnt;
+    map<pair<int, int> , double> F_init, entangle_succ_prob;
+
+    Path get_path(int from, int to);
 public:
-    Graph(int _num_nodes, int _time_limit, int memory_lower_bound, int memory_upper_bound, double _A, double _B, double _n, double _T, double _tao);
+    Graph(string filename, int _time_limit, double _swap_prob, double _fidelity_threshold, double _A, double _B, double _n, double _T, double _tao);
+    Graph() {}
     ~Graph();
     int get_node_memory_at(int node_id, int t);
     int get_node_memory(int node_id);
+    double get_node_swap_prob(int node_id);
     int get_num_nodes();
     int get_time_limit();
     int get_succ_request_cnt();
@@ -46,12 +44,22 @@ public:
     double get_T();
     double get_tao();
     double get_fidelity_gain();
+    double get_entangle_succ_prob(int u, int v);
+
+    double get_F_init(int u, int v);
+    map<pair<int, int>, double> get_F_init();
 
     vector<double> get_boundary();
     vector<double> get_cnt();
     bool check_resource(Shape shape);
     void reserve_shape(Shape shape);
-    vector<int> get_path(int from, int to);
+    bool check_path_resource(Path path, int amount);
+    void reserve_path(Path path);
+    void reserve_path(Path path, int amount);
+    int distance(int src, int dst);
+
+    vector<vector<int>> adj_list;
+    vector<set<int>> adj_set;
 };
 
 #endif

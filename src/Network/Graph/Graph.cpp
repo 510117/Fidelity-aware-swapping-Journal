@@ -1,5 +1,5 @@
 #include "Graph.h"
-
+using namespace std;
 
 int rnd(int lower_bound, int upper_bound) {
     random_device rd;
@@ -8,93 +8,43 @@ int rnd(int lower_bound, int upper_bound) {
     return unif(generator) % (upper_bound - lower_bound + 1) + lower_bound;
 }
 
-Graph::Graph(int _num_nodes, int _time_limit, int memory_lower_bound, int memory_upper_bound, double _A, double _B, double _n, double _T, double _tao):
-    num_nodes(_num_nodes), time_limit(_time_limit), A(_A), B(_B), n(_n), T(_T), tao(_tao), fidelity_gain(0), usage(0), succ_request_cnt(0) {
+Graph::Graph(string filename, int _time_limit, double _swap_prob, double _fidelity_threshold, double _A, double _B, double _n, double _T, double _tao):
+    time_limit(_time_limit), fidelity_threshold(_fidelity_threshold), A(_A), B(_B), n(_n), T(_T), tao(_tao), fidelity_gain(0), usage(0), succ_request_cnt(0) {
     // geneator an adj list
-    auto gen_tree = [&](int nn) {
-        vector<pair<int, int>> edge_list;
-        vector<int> pru_seq, cnt(nn + 1, 0);
-        for(int i = 0; i < nn - 2; i++) {
-            int node = rnd(1, nn);
-            pru_seq.push_back(node);
-        }
-        set<int> leaf;
-        for(int i = 1; i <= nn; i++) {
-            leaf.insert(i);
-        }
-        for(int i = 0; i < nn - 2; i++) {
-            leaf.erase(pru_seq[i]);
-            cnt[pru_seq[i]]++;
-        }
 
-        for(int i = 0; i < nn - 2; i++) {
-            auto mi = leaf.begin();
-            edge_list.emplace_back(*mi, pru_seq[i]);
-            leaf.erase(mi);
-            cnt[pru_seq[i]]--;
-            if(cnt[pru_seq[i]] == 0) {
-                leaf.insert(pru_seq[i]);
-            }
-        }
-        if (leaf.size() >= 2LL) {
-            edge_list.emplace_back(*leaf.begin(), *next(leaf.begin()));
-        }
+    ifstream graph_file(filename);
 
-        if((int)edge_list.size() != nn - 1) {
-            cerr << "error: In gen_tree, edge_size error" << endl;
-            cerr << "num_nodes = " << nn << " edge_size = " << edge_list.size() << endl;
-            exit(1);
-        }
-
-        vector<bool> vis(nn, false);
-        vector<vector<int>> result_list(nn);
-        for(auto P : edge_list) {
-            int u = P.first, v = P.second;
-            result_list[u - 1].push_back(v - 1);
-            result_list[v - 1].push_back(u - 1);
-        }
-        // BFS to check connect
-        queue<int> que;
-        que.push(0);
-        vis[0] = true;
-        while(!que.empty()) {
-            int frt = que.front();
-            que.pop();
-            for(int v : result_list[frt]) {
-                if(!vis[v]) {
-                    vis[v] = true;
-                    que.push(v);
-                }
-            }
-        }
-        for(int i = 0; i < nn; i++) {
-            if(!vis[i]) {
-                cerr << "error: In gen_tree, tree not connected" << endl;
-                exit(1);
-            }
-        }
-        if(DEBUG) cerr << "gen tree end" << endl;
-        return result_list;
-
-    };
-
-
-    adj_list = gen_tree(num_nodes);
+    graph_file >> num_nodes;
     adj_set.clear();
     adj_set.resize(num_nodes);
+    adj_list.clear();
+    adj_list.resize(num_nodes);
+
+    for(int id = 0; id < num_nodes; id++) {
+        int memory_rand;
+        double swap_prob = _swap_prob;
+        graph_file >> memory_rand;
+        nodes.push_back(Node(id, memory_rand, time_limit, swap_prob));
+    }
+    
+    int num_edges;
+    graph_file >> num_edges;
+    for(int i = 0; i < num_edges; i++) {
+        int v, u;
+        double f_init, entangle_prob;
+        graph_file >> v >> u >> f_init >> entangle_prob;
+        assert(v != u);
+        adj_list[v].push_back(u);
+        adj_list[u].push_back(v);
+        F_init[{v, u}] = f_init;
+        F_init[{u, v}] = f_init;
+        entangle_succ_prob[{v, u}] = entangle_prob;
+        entangle_succ_prob[{u, v}] = entangle_prob;
+    }
 
     for(int i = 0; i < num_nodes; i++) {
         for(auto v : adj_list[i]) {
             adj_set[i].insert(v);
-        }
-    }
-    assert((int)adj_list.size() == num_nodes);
-
-    for(int id = 0; id < num_nodes; id++) {
-        int memory_rand = rnd(memory_lower_bound, memory_upper_bound);
-        nodes.push_back(Node(id, memory_rand, time_limit));
-        for(int v : adj_list[id]) {
-            nodes[id].add_neighbor(v);
         }
     }
 
@@ -107,50 +57,34 @@ Graph::Graph(int _num_nodes, int _time_limit, int memory_lower_bound, int memory
     cnt.resize(boundary.size(), 0);
 }
 
-Graph::~Graph() {
-    if(DEBUG) cerr << "Delete Graph" << endl;
-}
+Graph::~Graph() { if(DEBUG) cerr << "Delete Graph" << endl; }
 
-int Graph::get_node_memory_at(int node_id, int t) {
-    return nodes[node_id].get_memory_at(t);
-}
-
-int Graph::get_node_memory(int node_id) {
-    return nodes[node_id].get_memory();
-}
-
-int Graph::get_num_nodes() {
-    return num_nodes;
-}
-int Graph::get_time_limit() {
-    return time_limit;
-}
-
+int Graph::get_node_memory_at(int node_id, int t) { return nodes[node_id].get_memory_at(t); }
+int Graph::get_node_memory(int node_id) { return nodes[node_id].get_memory(); }
+double Graph::get_node_swap_prob(int node_id) { return nodes[node_id].get_swap_prob(); }
+int Graph::get_num_nodes() { return num_nodes; }
+int Graph::get_time_limit() { return time_limit; }
 
 double Graph::get_A() { return A; }
 double Graph::get_B() { return B; }
 double Graph::get_n() { return n; }
 double Graph::get_T() { return T; }
 double Graph::get_tao() { return tao; }
+double Graph::get_entangle_succ_prob(int u, int v) { return entangle_succ_prob[{u, v}]; };
+double Graph::get_fidelity_gain() { return fidelity_gain; }
 
-int Graph::get_succ_request_cnt() {
-    return succ_request_cnt;
+int Graph::get_succ_request_cnt() { return succ_request_cnt;}
+int Graph::get_usage() { return usage; }
+
+vector<double> Graph::get_boundary() { return boundary; }
+vector<double> Graph::get_cnt() { return cnt; }
+
+double Graph::get_F_init(int u, int v) {
+    assert(adj_set[u].count(v));
+    return F_init[{u, v}];
 }
 
-double Graph::get_fidelity_gain() {
-    return fidelity_gain;
-}
-
-int Graph::get_usage() {
-    return usage;
-}
-
-vector<double> Graph::get_boundary() {
-    return boundary;
-}
-vector<double> Graph::get_cnt() {
-    return cnt;
-}
+map<pair<int, int>, double> Graph::get_F_init() { return F_init; }
 
 void DFS(int x, vector<bool> &vis, vector<int> &par, vector<vector<int>> &adj) {
     vis[x] = true;
@@ -161,7 +95,8 @@ void DFS(int x, vector<bool> &vis, vector<int> &par, vector<vector<int>> &adj) {
         }
     }
 }
-vector<int> Graph::get_path(int from, int to) {
+
+Path Graph::get_path(int from, int to) {
     vector<bool> vis(num_nodes + 1, false);
     vector<int> par(num_nodes + 1, -1);
     par[from] = -1;
@@ -175,6 +110,28 @@ vector<int> Graph::get_path(int from, int to) {
     reverse(path.begin(), path.end());
 
     return path;
+}
+
+int Graph::distance(int src, int dst) {
+    vector<bool> vis(num_nodes + 1, false);
+    vector<int> dis(num_nodes + 1, -1);
+    // BFS
+    queue<int> que;
+    dis[src] = 0;
+    vis[src] = true;
+    que.push(src);
+    while(!que.empty()) {
+        int frt = que.front();
+        que.pop();
+        for(int v : adj_list[frt]) {
+            if(!vis[v]) {
+                que.push(v);
+                dis[v] = dis[frt] + 1;
+                if(v == dst) return dis[v];
+            }
+        }
+    }
+    assert(false);
 }
 
 bool Graph::check_resource(Shape shape) {
@@ -240,11 +197,13 @@ void Graph::reserve_shape(Shape shape) {
         int node2 = nm[i].first;
         if(adj_set[node1].count(node2) == 0) {
             cerr << "shape error, the next node is not connected" << endl;
+            cerr << "node1 = " << node1 << " node2 = " << node2 << endl;
+            assert(adj_set[node1].count(node2) != 0);
             exit(1);
         } 
     }
 
-    double shape_fidelity = shape.get_fidelity(A, B, n, T, tao);
+    double shape_fidelity = shape.get_fidelity(A, B, n, T, tao, F_init);
     fidelity_gain += shape_fidelity;
     succ_request_cnt++;
 
@@ -254,4 +213,44 @@ void Graph::reserve_shape(Shape shape) {
             break;
         }
     }
+}
+
+void Graph::reserve_path(Path path, int amount) {
+    int src = path[0], dst = path.back();
+    nodes[src].reserve_memory(-amount);
+    nodes[dst].reserve_memory(-amount);
+    for(int node : path) {
+        if(nodes[node].get_memory() < 2 * amount) {
+            cerr << "error: Node Memeory is not enough in reserve_path" << endl;
+            cerr << "Node Memory = " << nodes[node].get_memory() << " amount = " << amount << endl;
+            exit(1);
+        }
+        nodes[node].reserve_memory(2 * amount);
+    }
+}
+void Graph::reserve_path(Path path) {
+    int src = path[0], dst = path.back();
+    int amount = min(nodes[src].get_memory(), nodes[dst].get_memory());
+    for(int node : path) {
+        if(node == src || node == dst) continue;
+        amount = min(amount, nodes[node].get_memory() / 2);
+    }
+
+    if(amount == 0) {
+        cerr << "error: in reserve_path memory is not enough" << endl;
+        exit(1);
+    }
+
+    nodes[src].reserve_memory(amount);
+    nodes[dst].reserve_memory(amount);
+    for(int node : path) {
+        if(node == src || node == dst) continue;
+        nodes[node].reserve_memory(amount * 2);
+    }
+}
+bool Graph::check_path_resource(Path path, int amount) {
+    for(int node : path) {
+        if(nodes[node].get_memory() < amount) return false;
+    }
+    return true;
 }

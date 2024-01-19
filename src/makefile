@@ -1,17 +1,18 @@
 dependency = Network/Node/Node.o Network/Shape/Shape.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o config.o
 algorithm = Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyAlgo1/MyAlgo1.o Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo4/MyAlgo4.o Algorithm/MyAlgo5/MyAlgo5.o
 algorithm2 = Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo1_time/MyAlgo1_time.o
+routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Greedy/Greedy.o Network/PathMethod/QCAST/QCAST.o
 gcc_flag = -g -Wall -Wextra -Os -Ofast --std=c++17
 
 all: a.out
 
-runtime: runtime.cpp $(dependency) $(algorithm2)
+runtime: runtime.cpp $(dependency) $(algorithm2) $(routing)
 	g++ -fopenmp $(gcc_flag) runtime.cpp $(dependency) $(algorithm2) -o runtime
 
-a.out: main.cpp $(dependency) $(algorithm)
-	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm)
+a.out: main.cpp $(dependency) $(algorithm) $(routing)
+	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing)
 
-cdf: cdf.cpp $(dependency) $(algorithm)
+cdf: cdf.cpp $(dependency) $(algorithm) $(routing)
 	g++ -fopenmp $(gcc_flag) cdf.cpp $(dependency) $(algorithm) -o cdf
 
 Network/Node/Node.o: Network/Node/Node.cpp Network/Node/Node.h config.h
@@ -54,8 +55,19 @@ Algorithm/MyAlgo5/MyAlgo5.o: Algorithm/MyAlgo5/MyAlgo5.h Algorithm/MyAlgo5/MyAlg
 	g++ -c $(gcc_flag) Algorithm/MyAlgo5/MyAlgo5.h Algorithm/MyAlgo5/MyAlgo5.cpp config.h
 	mv MyAlgo5.o Algorithm/MyAlgo5/MyAlgo5.o
 
+Network/PathMethod/Greedy/Greedy.o: Network/PathMethod/Greedy/Greedy.h Network/PathMethod/Greedy/Greedy.cpp config.h
+	g++ -c $(gcc_flag) Network/PathMethod/Greedy/Greedy.h Network/PathMethod/Greedy/Greedy.cpp config.h
+	mv Greedy.o Network/PathMethod/Greedy/Greedy.o
 
-config.o:	config.h config.cpp
+Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathMethod/QCAST/QCAST.cpp config.h
+	g++ -c $(gcc_flag) Network/PathMethod/QCAST/QCAST.h Network/PathMethod/QCAST/QCAST.cpp config.h
+	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
+
+Network/PathMethod/PathMethodBase/PathMethod.o: Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
+	g++ -c $(gcc_flag) Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
+	mv PathMethod.o Network/PathMethod/PathMethodBase/PathMethod.o
+
+config.o: config.h config.cpp
 	g++ -c $(gcc_flag) config.h config.cpp
 
 clean:

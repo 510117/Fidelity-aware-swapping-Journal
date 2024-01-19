@@ -1,7 +1,7 @@
 #include "MyAlgo1.h"
 
-MyAlgo1::MyAlgo1(Graph graph, vector<pair<int, int>> requests):
-    AlgorithmBase(graph, requests) {
+MyAlgo1::MyAlgo1(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths):
+    AlgorithmBase(graph, requests, paths) {
     algorithm_name = "MyAlgo1";
 
 }
@@ -51,38 +51,49 @@ Shape_vector MyAlgo1::separation_oracle() {
     return min_shape;
 }
 pair<Shape_vector, double> MyAlgo1::find_min_shape(int src, int dst) {
-    vector<int> path = graph.get_path(src, dst);
+    vector<Path> paths = get_paths(src, dst);
     
-    dp.clear();
-    dp.resize(path.size());
-    par.clear();
-    par.resize(path.size());
-    caled.clear();
-    caled.resize(path.size());
-    for(int i = 0; i < (int)path.size(); i++) {
-        dp[i].resize(path.size());
-        par[i].resize(path.size());
-        caled[i].resize(path.size());
-        for(int j = 0; j < (int)path.size(); j++) {
-            dp[i][j].resize(time_limit);
-            par[i][j].resize(time_limit, -2);
-            caled[i][j].resize(time_limit, false);
+    Shape_vector best_shape;
+    double best_cost = INF;
+    for(Path path : paths) {
+
+        dp.clear();
+        dp.resize(path.size());
+        par.clear();
+        par.resize(path.size());
+        caled.clear();
+        caled.resize(path.size());
+        for(int i = 0; i < (int)path.size(); i++) {
+            dp[i].resize(path.size());
+            par[i].resize(path.size());
+            caled[i].resize(path.size());
+            for(int j = 0; j < (int)path.size(); j++) {
+                dp[i][j].resize(time_limit);
+                par[i][j].resize(time_limit, -2);
+                caled[i][j].resize(time_limit, false);
+            }
+        }
+
+        double best = INF;
+        int best_time = -1;
+        for(int t = 0; t < time_limit; t++) {
+            double result = recursion_calculate_min_shape(0, path.size() - 1, t, path);
+            if(best > result) {
+                best = result;
+                best_time = t;
+            }
+        }
+
+        if(best_time == -1) continue;
+
+        if(best < best_cost) {
+            best_shape = recursion_find_shape(0, (int)path.size() - 1, best_time, path);
+            best_cost = best;
         }
     }
 
-    double best = INF;
-    int best_time = -1;
-    for(int t = 0; t < time_limit; t++) {
-        double result = recursion_calculate_min_shape(0, path.size() - 1, t, path);
-        if(best > result) {
-            best = result;
-            best_time = t;
-        }
-    }
-
-    if(best_time == -1) return {{}, INF};
-
-    return {recursion_find_shape(0, (int)path.size() - 1, best_time, path), best};
+    if(best_cost == INF) return {{}, INF};
+    return {best_shape, best_cost};
 }
 double MyAlgo1::recursion_calculate_min_shape(int left, int right, int t, vector<int> &path) {
     if(t <= 0) return INF;
@@ -103,7 +114,7 @@ double MyAlgo1::recursion_calculate_min_shape(int left, int right, int t, vector
         double right_result = recursion_calculate_min_shape(k, right, t - 1, path);
         double result = left_result + right_result;
         int dis_mid = abs((left + right) / 2 - k);
-        if(result < best || (fabs(result - best) <= EPS && dis_mid < best_dis_mid)) {
+        if(result + EPS < best || (fabs(result - best) <= EPS && dis_mid < best_dis_mid)) {
             best = result;
             best_k = k;
             best_dis_mid = dis_mid;
@@ -255,9 +266,9 @@ void MyAlgo1::run() {
             }
         }
 
-        sort(shapes.rbegin(), shapes.rend(), [](pair<double, Shape_vector> left, pair<double, Shape_vector> right) {
-            if(fabs(left.first - right.first) >= EPS) return left.first < right.first;
-            if(left.second.size() != right.second.size()) return left.second.size() > right.second.size();
+        sort(shapes.begin(), shapes.end(), [](pair<double, Shape_vector> left, pair<double, Shape_vector> right) {
+            if(fabs(left.first - right.first) >= EPS) return left.first > right.first;
+            if(left.second.size() != right.second.size()) return left.second.size() < right.second.size();
             return left.second < right.second;
         });
         // cerr << "[MyAlgo1] " << shapes.size() << endl;

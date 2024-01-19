@@ -1,9 +1,6 @@
 #ifndef __MYALGO1_H
 #define __MYALGO1_H
 
-#include <iostream>
-#include <algorithm>
-#include <utility>
 #include "../AlgorithmBase/AlgorithmBase.h"
 #include "../../Network/Graph/Graph.h"
 #include "../../config.h"
@@ -24,7 +21,7 @@ class MyAlgo1 : public AlgorithmBase {
     double recursion_calculate_min_shape(int left, int right, int t, vector<int> &path);
     Shape_vector recursion_find_shape(int left, int right, int t, vector<int> &path);
 public:
-    MyAlgo1(Graph graph, vector<pair<int, int>> requests);
+    MyAlgo1(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths);
     void run();
 };
 

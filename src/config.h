@@ -1,6 +1,20 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
+#include <random>
+#include <functional>
+#include <cassert>
+#include <ctime>
+#include <algorithm>
+#include <utility>
+#include <fstream>
+
 #define double long double
 
 extern bool DEBUG;

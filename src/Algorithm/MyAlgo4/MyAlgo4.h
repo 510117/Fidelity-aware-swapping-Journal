@@ -1,9 +1,6 @@
 #ifndef __MYALGO4_H
 #define __MYALGO4_H
 
-#include    <iostream>
-#include    <algorithm>
-#include    <queue>
 #include    "../AlgorithmBase/AlgorithmBase.h"
 #include    "../../Network/Graph/Graph.h"
 #include    "../../config.h"
@@ -16,7 +13,7 @@ class MyAlgo4 : public AlgorithmBase {
     Shape_vector build_merge_shape(vector<int> path);
 
 public:
-    MyAlgo4(Graph graph, vector<pair<int, int>> requests);
+    MyAlgo4(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths);
     void run();
 };
 

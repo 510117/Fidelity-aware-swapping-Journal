@@ -1,9 +1,6 @@
 #ifndef __MYALGO3_H
 #define __MYALGO3_H
 
-#include    <iostream>
-#include    <algorithm>
-#include    <queue>
 #include    "../AlgorithmBase/AlgorithmBase.h"
 #include    "../../Network/Graph/Graph.h"
 #include    "../../config.h"
@@ -22,7 +19,7 @@ class MyAlgo3 : public AlgorithmBase {
     Shape_vector backtracing_shape(int left, int right, int t, int state, vector<int> &path);
     Shape_vector backtracing_shape2(int left, int right, int t, int state, vector<int> &path);
 public:
-    MyAlgo3(Graph graph, vector<pair<int, int>> requests);
+    MyAlgo3(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths);
     void run();
 };
 

@@ -10,15 +10,15 @@ Shape_vector Shape::get_node_mem_range() {
 }
 
 
-double Shape::get_fidelity(double _A, double _B, double _n, double _T, double _tao) {
+double Shape::get_fidelity(double _A, double _B, double _n, double _T, double _tao, map<pair<int, int> , double> F_init) {
     A = _A, B = _B, n = _n, T = _T, tao = _tao;
     // cerr << A << " " << B << " " << n << " " << T << " " << tao << endl;
     check_valid();
-    return recursion_get_fidelity(0, (int)node_mem_range.size() - 1);
+    return recursion_get_fidelity(0, (int)node_mem_range.size() - 1, F_init);
 }
 
-double Shape::recursion_get_fidelity(int left, int right) {
-    if(left == right - 1) return pass_tao(1);
+double Shape::recursion_get_fidelity(int left, int right, map<pair<int, int> , double> &F_init) {
+    if(left == right - 1) return pass_tao(F_init[{node_mem_range[left].first, node_mem_range[right].first}]);
     int latest = left + 1;
     for(int i = left + 1; i < right; i++) {
         if(node_mem_range[i].second[0].second > node_mem_range[latest].second[0].second) {
@@ -26,8 +26,8 @@ double Shape::recursion_get_fidelity(int left, int right) {
         }
     }
 
-    double Fa = recursion_get_fidelity(left, latest);
-    double Fb = recursion_get_fidelity(latest, right);
+    double Fa = recursion_get_fidelity(left, latest, F_init);
+    double Fb = recursion_get_fidelity(latest, right, F_init);
 
     int now_swap_time = node_mem_range[latest].second[0].second;
     int next_swap_time = min(node_mem_range[left].second.back().second, node_mem_range[right].second.front().second);

@@ -1,11 +1,8 @@
 #ifndef __ALGORITHMBASE_H
 #define __ALGORITHMBASE_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
 #include "../../Network/Graph/Graph.h"
+#include "../../Network/PathMethod/PathMethodBase/PathMethod.h"
 #include "../../config.h"
 using namespace std;
 
@@ -16,8 +13,9 @@ protected:
     Graph graph;
     map<string, double> res;
     vector<double> cdf;
-    vector<pair<int, int>> requests;
+    vector<SDpair> requests;
     int time_limit, memory_total, request_cnt;
+    map<SDpair, vector<Path>> paths;
     void update_res();
     double A, B, n, T, tao;
     double bar(double F);
@@ -25,8 +23,9 @@ protected:
     double t2F(double t);
     double F2t(double F);
     double pass_tao(double F);
+    vector<Path> get_paths(int src, int dst);
 public:
-    AlgorithmBase(Graph graph, vector<pair<int, int>> requests);
+    AlgorithmBase(Graph graph, vector<SDpair> requests, map<SDpair, vector<Path>> paths);
     map<string, double> get_res();
     double get_res(string str);
     vector<double> get_cdf();

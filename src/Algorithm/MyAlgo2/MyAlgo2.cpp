@@ -1,7 +1,7 @@
 #include "MyAlgo2.h"
 
-MyAlgo2::MyAlgo2(Graph graph, vector<pair<int, int>> requests):
-    AlgorithmBase(graph, requests) {
+MyAlgo2::MyAlgo2(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths):
+    AlgorithmBase(graph, requests, paths) {
     algorithm_name = "MyAlgo2";
     // m = i + vt
     // x(i, m) = 0
@@ -45,38 +45,49 @@ Shape_vector MyAlgo2::separation_oracle() {
     return min_shape;
 }
 pair<Shape_vector, double> MyAlgo2::find_min_shape(int src, int dst) {
-    vector<int> path = graph.get_path(src, dst);
+    vector<Path> paths = get_paths(src, dst);
     
-    dp.clear();
-    dp.resize(path.size());
-    par.clear();
-    par.resize(path.size());
-    caled.clear();
-    caled.resize(path.size());
-    for(int i = 0; i < (int)path.size(); i++) {
-        dp[i].resize(path.size());
-        par[i].resize(path.size());
-        caled[i].resize(path.size());
-        for(int j = 0; j < (int)path.size(); j++) {
-            dp[i][j].resize(time_limit);
-            par[i][j].resize(time_limit, -2);
-            caled[i][j].resize(time_limit, false);
+    Shape_vector best_shape;
+    double best_cost = -1;
+    for(Path path : paths) {
+
+        dp.clear();
+        dp.resize(path.size());
+        par.clear();
+        par.resize(path.size());
+        caled.clear();
+        caled.resize(path.size());
+        for(int i = 0; i < (int)path.size(); i++) {
+            dp[i].resize(path.size());
+            par[i].resize(path.size());
+            caled[i].resize(path.size());
+            for(int j = 0; j < (int)path.size(); j++) {
+                dp[i][j].resize(time_limit);
+                par[i][j].resize(time_limit, -2);
+                caled[i][j].resize(time_limit, false);
+            }
+        }
+
+        double best = INF;
+        int best_time = -1;
+        for(int t = 0; t < time_limit; t++) {
+            double result = recursion_calculate_min_shape(0, path.size() - 1, t, path);
+            if(best > result) {
+                best = result;
+                best_time = t;
+            }
+        }
+
+        if(best_time == -1) continue;
+
+        if(best > best_cost) {
+            best_shape = recursion_find_shape(0, (int)path.size() - 1, best_time, path);
+            best_cost = best;
         }
     }
 
-    double best = INF;
-    int best_time = -1;
-    for(int t = 0; t < time_limit; t++) {
-        double result = recursion_calculate_min_shape(0, path.size() - 1, t, path);
-        if(best > result) {
-            best = result;
-            best_time = t;
-        }
-    }
-
-    if(best_time == -1) return {{}, INF};
-
-    return {recursion_find_shape(0, (int)path.size() - 1, best_time, path), best};
+    if(best_cost == -1) return {{}, INF};
+    return {best_shape, best_cost};
 }
 double MyAlgo2::recursion_calculate_min_shape(int left, int right, int t, vector<int> &path) {
     if(t <= 0) return INF;
@@ -268,7 +279,7 @@ void MyAlgo2::run() {
         double xim_sum = 0;
         for(auto P : x[i]) {
             xim_sum += P.second;
-            res["fidelity_gain"] += P.second * Shape(P.first).get_fidelity(A, B, n, T, tao);
+            res["fidelity_gain"] += P.second * Shape(P.first).get_fidelity(A, B, n, T, tao, graph.get_F_init());
             res["succ_request_cnt"] += P.second;
 
             for(auto id_mem : P.first) {

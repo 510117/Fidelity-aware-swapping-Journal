@@ -1,101 +1,118 @@
 #include "MyAlgo3.h"
 
-MyAlgo3::MyAlgo3(Graph graph, vector<pair<int, int>> requests):
-    AlgorithmBase(graph, requests) {
+MyAlgo3::MyAlgo3(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths):
+    AlgorithmBase(graph, requests, paths) {
     algorithm_name = "MyAlgo3";
 }
 
-
-
 pair<Shape, double> MyAlgo3::calculate_best_shape(int src, int dst) {
     // cerr << "cal " << src << " " << dst << endl;
-    vector<int> path = graph.get_path(src, dst);
-    dp.clear();
-    dp.resize(path.size());
-    caled.clear();
-    caled.resize(path.size());
-    par.clear();
-    par.resize(path.size());
-    for(int i = 0; i < (int)path.size(); i++) {
-        dp[i].resize(path.size());
-        par[i].resize(path.size());
-        caled[i].resize(path.size());
-        for(int j = 0; j < (int)path.size(); j++) {
-            dp[i][j].resize(time_limit);
-            par[i][j].resize(time_limit);
-            caled[i][j].resize(time_limit);
-            for(int t = 0; t < time_limit; t++) {
-                dp[i][j][t].resize(4, 0);
-                par[i][j][t].resize(4, {-2, -2});
-                caled[i][j][t].resize(4, false);
+    vector<Path> paths = get_paths(src, dst);
+    
+    Shape best_shape;
+    double best_fidelity = -1;
+    for(Path path : paths) {
+        dp.clear();
+        dp.resize(path.size());
+        caled.clear();
+        caled.resize(path.size());
+        par.clear();
+        par.resize(path.size());
+        for(int i = 0; i < (int)path.size(); i++) {
+            dp[i].resize(path.size());
+            par[i].resize(path.size());
+            caled[i].resize(path.size());
+            for(int j = 0; j < (int)path.size(); j++) {
+                dp[i][j].resize(time_limit);
+                par[i][j].resize(time_limit);
+                caled[i][j].resize(time_limit);
+                for(int t = 0; t < time_limit; t++) {
+                    dp[i][j][t].resize(4, 0);
+                    par[i][j][t].resize(4, {-2, -2});
+                    caled[i][j][t].resize(4, false);
+                }
             }
         }
-    }
 
-    double best = EPS;
-    int best_time = -1;
-    for(int t = time_limit - 1; t >= 0; t--) {
-        double result = solve_fidelity(0, path.size() - 1, t, 0, path);
-        if(result > best) {
-            best_time = t;
-            best = result;
+        double best = EPS;
+        int best_time = -1;
+        for(int t = time_limit - 1; t >= 0; t--) {
+            double result = solve_fidelity(0, path.size() - 1, t, 0, path);
+            if(result > best) {
+                best_time = t;
+                best = result;
+            }
+        }
+
+        if(best_time == -1) return {{}, 0};
+        Shape shape = Shape(backtracing_shape(0, path.size() - 1, best_time, 0, path));
+        // shape.print();
+        if(fabs(shape.get_fidelity(A, B, n, T, tao, graph.get_F_init()) - best) > EPS) {
+            shape.print();
+            cerr << "[" << algorithm_name << "]" << endl;
+            cerr << shape.get_fidelity(A, B, n, T, tao, graph.get_F_init()) << " " << best << endl;
+            cerr << "the result diff is too much" << endl;
+            exit(1);
+        }
+
+        if(best > best_fidelity) {
+            best_fidelity = best;
+            best_shape = shape;
         }
     }
-
-    if(best_time == -1) return {{}, 0};
-    Shape shape = Shape(backtracing_shape(0, path.size() - 1, best_time, 0, path));
-    // shape.print();
-    if(fabs(shape.get_fidelity(A, B, n, T, tao) - best) > EPS) {
-        shape.print();
-        cerr << "[" << algorithm_name << "]" << endl;
-        cerr << shape.get_fidelity(A, B, n, T, tao) << " " << best << endl;
-        cerr << "the result diff is too much" << endl;
-        exit(1);
-    }
-    return {shape, best};
+    return {best_shape, best_fidelity};
 }
 
 pair<Shape, double> MyAlgo3::calculate_best_shape2(int src, int dst) {
     // cerr << "cal " << src << " " << dst << endl;
-    vector<int> path = graph.get_path(src, dst);
-    dp2.clear();
-    dp2.resize(path.size());
-    caled2.clear();
-    caled2.resize(path.size());
-    par2.clear();
-    par2.resize(path.size());
-    for(int i = 0; i < (int)path.size(); i++) {
-        dp2[i].resize(path.size());
-        par2[i].resize(path.size());
-        caled2[i].resize(path.size());
-        for(int j = 0; j < (int)path.size(); j++) {
-            dp2[i][j].resize(time_limit);
-            par2[i][j].resize(time_limit);
-            caled2[i][j].resize(time_limit);
-            for(int t = 0; t < time_limit; t++) {
-                dp2[i][j][t].resize(4, 0);
-                par2[i][j][t].resize(4, {-2, -2});
-                caled2[i][j][t].resize(4, false);
+    vector<Path> paths = get_paths(src, dst);
+
+    Shape best_shape;
+    double best_fidelity = -1;
+    for(Path path : paths) {
+        dp2.clear();
+        dp2.resize(path.size());
+        caled2.clear();
+        caled2.resize(path.size());
+        par2.clear();
+        par2.resize(path.size());
+        for(int i = 0; i < (int)path.size(); i++) {
+            dp2[i].resize(path.size());
+            par2[i].resize(path.size());
+            caled2[i].resize(path.size());
+            for(int j = 0; j < (int)path.size(); j++) {
+                dp2[i][j].resize(time_limit);
+                par2[i][j].resize(time_limit);
+                caled2[i][j].resize(time_limit);
+                for(int t = 0; t < time_limit; t++) {
+                    dp2[i][j][t].resize(4, 0);
+                    par2[i][j][t].resize(4, {-2, -2});
+                    caled2[i][j][t].resize(4, false);
+                }
             }
         }
-    }
 
-    double best = INF;
-    int best_time = -1;
-    for(int t = time_limit - 1; t >= 0; t--) {
-        double result = solve2(0, path.size() - 1, t, 0, path);
-        if(result < best) {
-            best_time = t;
-            best = result;
+        double best = INF;
+        int best_time = -1;
+        for(int t = time_limit - 1; t >= 0; t--) {
+            double result = solve2(0, path.size() - 1, t, 0, path);
+            if(result < best) {
+                best_time = t;
+                best = result;
+            }
+        }
+
+        if(best_time == -1) continue;
+        // shape.print();
+        if(best > best_fidelity) {
+            best_shape = Shape(backtracing_shape2(0, path.size() - 1, best_time, 0, path));
+            best_fidelity = best;
         }
     }
 
-    if(best_time == -1) return {{}, 0};
-    Shape shape = Shape(backtracing_shape2(0, path.size() - 1, best_time, 0, path));
-    // shape.print();
-    return {shape, best};
+    if(best_fidelity == -1) return {{}, INF};
+    return {best_shape, best_fidelity};
 }
-
 // state = 0, left right no limit
 // state = 1, left limit
 // state = 2, right limit
@@ -117,7 +134,7 @@ double MyAlgo3::solve_fidelity(int left, int right, int t, int state, vector<int
         if(state == 1 && (left_last_remain <= 1 || right_last_remain <= 0)) return 0;
         if(state == 2 && (left_last_remain <= 0 || right_last_remain <= 1)) return 0;
         if(state == 3 && (left_last_remain <= 1 || right_last_remain <= 1)) return 0;
-        return pass_tao(1);
+        return pass_tao(graph.get_F_init(left_id, right_id));
     }
 
     if(caled[left][right][t][state]) return dp[left][right][t][state];
@@ -334,7 +351,7 @@ double MyAlgo3::cp_value(Shape shape) {
     }
 
     if(sum <= EPS) return 0;
-    return shape.get_fidelity(A, B, n, T, tao) / sum;
+    return shape.get_fidelity(A, B, n, T, tao, graph.get_F_init()) / sum;
 }
 
 void MyAlgo3::run() {
