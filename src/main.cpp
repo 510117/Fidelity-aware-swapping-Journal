@@ -36,7 +36,7 @@ int main(){
 
     map<string, double> default_setting;
     default_setting["num_nodes"] = 100;
-    default_setting["request_cnt"] = 50;
+    default_setting["request_cnt"] = 100;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 14;
     default_setting["avg_memory"] = 7;
