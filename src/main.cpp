@@ -38,7 +38,7 @@ int main(){
     default_setting["num_nodes"] = 100;
     default_setting["request_cnt"] = 100;
     default_setting["area_alpha"] = 0.0005;
-    default_setting["time_limit"] = 14;
+    default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.2;
     default_setting["path_length"] = -1;
@@ -56,6 +56,7 @@ int main(){
     change_parameter["path_length"] = {11, 13, 15, 17};
     change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8, 0.9}; 
     change_parameter["fidelity_threshold"] = {0.2, 0.4, 0.6, 0.8, 0.9};
+    change_parameter["time_limit"] = {3, 5, 7, 9, 11};
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
     vector<string> X_names = {"request_cnt", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"};
