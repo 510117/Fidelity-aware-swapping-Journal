@@ -72,6 +72,7 @@ double Graph::get_T() { return T; }
 double Graph::get_tao() { return tao; }
 double Graph::get_entangle_succ_prob(int u, int v) { return entangle_succ_prob[{u, v}]; };
 double Graph::get_fidelity_gain() { return fidelity_gain; }
+double Graph::get_fidelity_threshold() { return fidelity_threshold; }
 
 int Graph::get_succ_request_cnt() { return succ_request_cnt;}
 int Graph::get_usage() { return usage; }

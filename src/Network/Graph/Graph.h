@@ -45,6 +45,7 @@ public:
     double get_tao();
     double get_fidelity_gain();
     double get_entangle_succ_prob(int u, int v);
+    double get_fidelity_threshold();
 
     double get_F_init(int u, int v);
     map<pair<int, int>, double> get_F_init();
