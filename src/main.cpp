@@ -45,7 +45,7 @@ int main(){
     default_setting["min_fidelity"] = 0.7;
     default_setting["max_fidelity"] = 0.95;
     default_setting["swap_prob"] = 0.9;
-    default_setting["fidelity_threshold"] = 0.7;
+    default_setting["fidelity_threshold"] = 0.5;
 
     map<string, vector<double>> change_parameter;
     change_parameter["request_cnt"] = {30, 40, 50, 60, 70};
