@@ -55,10 +55,10 @@ int main(){
     change_parameter["tao"] = {0.2, 0.4, 0.6, 0.8, 1};
     change_parameter["path_length"] = {11, 13, 15, 17};
     change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8, 0.9}; 
-    change_parameter["fidelity_threshold"] = {0.5, 0.6, 0.7, 0.8, 0.9};
+    change_parameter["fidelity_threshold"] = {0.2, 0.4, 0.6, 0.8, 0.9};
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
-    vector<string> X_names = {"request_cnt", "path_length", "avg_memory", "min_fidelity"};
+    vector<string> X_names = {"request_cnt", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"};
     vector<string> Y_names = {"fidelity_gain", "succ_request_cnt", "utilization"};
     vector<string> algo_names = {"MyAlgo1", "MyAlgo2", "MyAlgo3", "Merge", "Linear"};
     // init result
