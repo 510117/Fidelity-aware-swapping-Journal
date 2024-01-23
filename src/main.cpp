@@ -36,7 +36,7 @@ int main(){
 
     map<string, double> default_setting;
     default_setting["num_nodes"] = 100;
-    default_setting["request_cnt"] = 100;
+    default_setting["request_cnt"] = 50;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 7;
@@ -59,7 +59,7 @@ int main(){
     change_parameter["time_limit"] = {3, 5, 7, 9, 11};
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
-    vector<string> X_names = {"request_cnt", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"};
+    vector<string> X_names = {"request_cnt", "time_limit", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"};
     vector<string> Y_names = {"fidelity_gain", "succ_request_cnt", "utilization"};
     vector<string> algo_names = {"MyAlgo1", "MyAlgo2", "MyAlgo3", "Merge", "Linear"};
     // init result
