@@ -100,7 +100,7 @@ int main(){
                 int length_upper, length_lower;
                 if(input_parameter["path_length"] == -1) {
                     length_upper = num_nodes;
-                    length_lower = 5;
+                    length_lower = 7;
                 } else {
                     length_upper = input_parameter["path_length"] + 1;
                     length_lower = input_parameter["path_length"] - 1;
