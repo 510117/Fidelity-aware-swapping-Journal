@@ -112,7 +112,7 @@ void MyAlgo5::run() {
 
             }
 
-            if(find) {
+            if(find && graph.check_resource(shape)) {
                 graph.reserve_shape(Shape(shape));
                 update_res();
                 break;

@@ -58,6 +58,7 @@ public:
     void reserve_path(Path path, int amount);
     int distance(int src, int dst);
 
+    void increase_resources(int multi);
     vector<vector<int>> adj_list;
     vector<set<int>> adj_set;
 };

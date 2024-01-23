@@ -55,7 +55,7 @@ pair<Shape, double> MyAlgo3::calculate_best_shape(int src, int dst) {
             exit(1);
         }
 
-        if(best > best_fidelity) {
+        if(best > best_fidelity && graph.check_resource(shape)) {
             best_fidelity = best;
             best_shape = shape;
         }
@@ -68,7 +68,7 @@ pair<Shape, double> MyAlgo3::calculate_best_shape2(int src, int dst) {
     vector<Path> paths = get_paths(src, dst);
 
     Shape best_shape;
-    double best_fidelity = -1;
+    double best_value = INF;
     for(Path path : paths) {
         dp2.clear();
         dp2.resize(path.size());
@@ -103,15 +103,16 @@ pair<Shape, double> MyAlgo3::calculate_best_shape2(int src, int dst) {
         }
 
         if(best_time == -1) continue;
+        Shape shape = Shape(backtracing_shape2(0, path.size() - 1, best_time, 0, path));
         // shape.print();
-        if(best > best_fidelity) {
-            best_shape = Shape(backtracing_shape2(0, path.size() - 1, best_time, 0, path));
-            best_fidelity = best;
+        if(best > best_value && graph.check_resource(shape)) {
+            best_shape = shape;
+            best_value = best;
         }
     }
 
-    if(best_fidelity == -1) return {{}, INF};
-    return {best_shape, best_fidelity};
+    if(best_value == INF) return {{}, INF};
+    return {best_shape, best_value};
 }
 // state = 0, left right no limit
 // state = 1, left limit

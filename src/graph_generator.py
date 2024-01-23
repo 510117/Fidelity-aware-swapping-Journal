@@ -64,7 +64,7 @@ print("min_fidelity =", min_fidelity, ", max_fidelity =", max_fidelity, file=sys
 print("min_memory_cnt =", min_memory_cnt, ", max_memory_cnt =", max_memory_cnt, file=sys.stderr)
 
 while True:
-    G = nx.waxman_graph(num_of_node, beta=0.85, alpha=0.1, domain=(0, 0, 0.5, 1))
+    G = nx.waxman_graph(num_of_node, beta=0.85, alpha=0.05, domain=(0, 0, 0.5, 1))
     # G = nx.waxman_graph(num_of_node, beta=0.85, alpha=10, domain=(0, 0, 0.5, 1))
     positions = nx.get_node_attributes(G, 'pos')
     add_edge = []
@@ -121,10 +121,10 @@ with open(path, 'w') as f:
             avg_l += dis
     avg_l /= num_of_edge
 
-# print("num_of_edge =", num_of_edge, file=sys.stderr)
-# print("avg_edge_len =", avg_l, file=sys.stderr)
-# print("avg_ent_prob =", prob(entangle_lambda, avg_l), file=sys.stderr)
-# print("\n======== graph generate finished ! ========", file=sys.stderr)
+print("num_of_edge =", num_of_edge, file=sys.stderr)
+print("avg_edge_len =", avg_l, file=sys.stderr)
+print("avg_ent_prob =", prob(entangle_lambda, avg_l), file=sys.stderr)
+print("\n======== graph generate finished ! ========", file=sys.stderr)
 print("======== graph generate finished ! ========")
 
 

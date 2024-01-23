@@ -36,7 +36,7 @@ int main(){
 
     map<string, double> default_setting;
     default_setting["num_nodes"] = 100;
-    default_setting["request_cnt"] = 30;
+    default_setting["request_cnt"] = 50;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 14;
     default_setting["avg_memory"] = 7;
@@ -48,16 +48,14 @@ int main(){
     default_setting["fidelity_threshold"] = 0.7;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["request_cnt"] = {10, 20, 30, 40, 50};
+    change_parameter["request_cnt"] = {30, 40, 50, 60, 70};
     change_parameter["num_nodes"] = {40, 70, 100, 130, 160};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
-    change_parameter["time_limit"] = {6, 22};
     change_parameter["avg_memory"] = {3, 5, 7, 9, 11};
     change_parameter["tao"] = {0.2, 0.4, 0.6, 0.8, 1};
     change_parameter["path_length"] = {11, 13, 15, 17};
     change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8, 0.9}; 
     change_parameter["fidelity_threshold"] = {0.5, 0.6, 0.7, 0.8, 0.9};
-
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
     vector<string> X_names = {"request_cnt", "path_length", "avg_memory", "min_fidelity"};
@@ -108,6 +106,7 @@ int main(){
                     length_lower = input_parameter["path_length"] - 1;
                 }
 
+                int sum_has_path = 0;
                 // #pragma omp parallel for
                 for(int r = 0; r < round; r++){
                     string round_str = to_string(r);
@@ -146,12 +145,17 @@ int main(){
                         requests.push_back(new_request);
                     }
 
-                    path_method->build_paths(graph, requests);
+                    Graph path_graph = graph;
+                    path_graph.increase_resources(10);
+                    path_method->build_paths(path_graph, requests);
                     map<SDpair, vector<Path>> paths = path_method->get_paths();
 
                     int path_len = 0, path_cnt = 0, mx_path_len = 0;
+
+                    int has_path = 0;
                     for(auto P : paths) {
                         int mi_path_len = INF;
+                        has_path += !P.second.empty();
                         for(Path path : P.second) {
                             mi_path_len = min(mi_path_len, (int)path.size());
                             for(int i = 1; i < (int)path.size(); i++) {
@@ -164,8 +168,11 @@ int main(){
                             path_len += mi_path_len;
                         }
                     }
-
+                    
+                    sum_has_path += has_path;
                     cerr << "Path method: " << path_method->get_name() << "\n";
+                    cerr << "Request cnt: " << request_cnt << "\n";
+                    cerr << "Has Path cnt: " << has_path << "\n";
                     cerr << "Avg path length = " << path_len / (double)path_cnt << "\n";
                     cerr << "Max path length = " << mx_path_len << "\n";
                     vector<AlgorithmBase*> algorithms;
@@ -186,7 +193,7 @@ int main(){
                         for(string Y_name : Y_names) {
                             result[r][algorithms[i]->get_name()][Y_name] = algorithms[i]->get_res(Y_name);
                         }
-                    }                
+                    }
 
                     now = time(0);
                     dt = ctime(&now);
@@ -227,6 +234,7 @@ int main(){
                         }
                         ofs << sum_res[algo_name][Y_name] / round << ' ';
                     }
+                    ofs << sum_has_path / (double)round;
                     ofs << endl;
                     ofs.close();
                 }

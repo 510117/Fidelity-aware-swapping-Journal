@@ -18,10 +18,26 @@ string PathMethod::get_name() {
 void PathMethod::reserve_path(Path path) {
     graph.reserve_path(path);
     paths[{path[0], path.back()}].push_back(path);
+    if(paths[{path[0], path.back()}].size() >= 3) {
+        for(int i = 0; i < (int)requests.size(); i++) {
+            if(requests[i] == make_pair(path[0], path.back())) {
+                requests.erase(requests.begin() + i);
+                return;
+            }
+        }
+    }
 }
 
 void PathMethod::reserve_path(Path path, int amount) {
     assert(graph.check_path_resource(path, amount));
     graph.reserve_path(path, amount);
     paths[{path[0], path.back()}].push_back(path);
+    if(paths[{path[0], path.back()}].size() >= 3) {
+        for(int i = 0; i < (int)requests.size(); i++) {
+            if(requests[i] == make_pair(path[0], path.back())) {
+                requests.erase(requests.begin() + i);
+                return;
+            }
+        }
+    }
 }

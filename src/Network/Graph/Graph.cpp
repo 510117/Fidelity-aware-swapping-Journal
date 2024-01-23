@@ -136,6 +136,7 @@ int Graph::distance(int src, int dst) {
 
 bool Graph::check_resource(Shape shape) {
     Shape_vector nm = shape.get_node_mem_range();
+    if(shape.get_fidelity(A, B, n, T, tao, F_init) < fidelity_threshold) return false;
     for(int i = 0; i < (int)nm.size(); i++) {
         int node = nm[i].first;
         map<int, int> need_amount; // time to amount
@@ -197,13 +198,16 @@ void Graph::reserve_shape(Shape shape) {
         int node2 = nm[i].first;
         if(adj_set[node1].count(node2) == 0) {
             cerr << "shape error, the next node is not connected" << endl;
-            cerr << "node1 = " << node1 << " node2 = " << node2 << endl;
-            assert(adj_set[node1].count(node2) != 0);
             exit(1);
         } 
     }
 
     double shape_fidelity = shape.get_fidelity(A, B, n, T, tao, F_init);
+    if(shape_fidelity + EPS < fidelity_threshold) {
+        cerr << "the fidelity of shape is not greater than threshold" << endl;
+        assert(false);
+        exit(1);
+    }
     fidelity_gain += shape_fidelity;
     succ_request_cnt++;
 
@@ -241,6 +245,7 @@ void Graph::reserve_path(Path path) {
         exit(1);
     }
 
+    amount = 1;
     nodes[src].reserve_memory(amount);
     nodes[dst].reserve_memory(amount);
     for(int node : path) {
@@ -253,4 +258,12 @@ bool Graph::check_path_resource(Path path, int amount) {
         if(nodes[node].get_memory() < amount) return false;
     }
     return true;
+}
+
+
+void Graph::increase_resources(int multi) {
+    for(int i = 0; i < num_nodes; i++) {
+        int node_memory = nodes[i].get_memory();
+        nodes[i].reserve_memory(-node_memory * (multi - 1));
+    }
 }
