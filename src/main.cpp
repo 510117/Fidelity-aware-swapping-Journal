@@ -66,7 +66,7 @@ int main(){
     
 
 
-    int round = 2;
+    int round = 5;
     vector<PathMethod*> path_methods;
     path_methods.emplace_back(new Greedy());
     path_methods.emplace_back(new QCAST());
@@ -107,7 +107,7 @@ int main(){
                 }
 
                 int sum_has_path = 0;
-                // #pragma omp parallel for
+                #pragma omp parallel for
                 for(int r = 0; r < round; r++){
                     string round_str = to_string(r);
                     ofstream ofs;
@@ -147,8 +147,16 @@ int main(){
 
                     Graph path_graph = graph;
                     path_graph.increase_resources(10);
-                    path_method->build_paths(path_graph, requests);
-                    map<SDpair, vector<Path>> paths = path_method->get_paths();
+                    PathMethod *new_path_method;
+                    if(path_method->get_name() == "Greedy") new_path_method = new Greedy();
+                    else if(path_method->get_name() == "QCAST") new_path_method = new QCAST();
+                    else {
+                        cerr << "unknown path method" << endl;
+                        assert(false);
+                    }
+
+                    new_path_method->build_paths(path_graph, requests);
+                    map<SDpair, vector<Path>> paths = new_path_method->get_paths();
 
                     int path_len = 0, path_cnt = 0, mx_path_len = 0;
 
