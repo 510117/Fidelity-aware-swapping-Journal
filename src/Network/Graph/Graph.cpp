@@ -150,6 +150,7 @@ bool Graph::check_resource(Shape shape) {
             if(right >= time_limit) {
                 cerr << "the reserve time is exceed the timelimit" << endl;
                 cerr << "timelimt = " << time_limit << " reserve time = " << right << endl;
+                assert(false);
                 exit(1);
             }
             for(int t = left; t <= right; t++) {
@@ -178,6 +179,7 @@ void Graph::reserve_shape(Shape shape) {
             if(right >= time_limit) {
                 cerr << "the reserve time is exceed the timelimit" << endl;
                 cerr << "timelimt = " << time_limit << " reserve time = " << right << endl;
+                assert(false);
                 exit(1);
             }
             for(int t = left; t <= right; t++) {
