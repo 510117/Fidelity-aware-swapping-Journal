@@ -373,7 +373,7 @@ void MyAlgo3::run() {
                 best_shape = shape1;
                 best_cp = cp1;
             }
-            if(cp2 > best_cp * 2) {
+            if(cp2 > best_cp) {
                 best_request = i;
                 best_shape = shape2;
                 best_cp = cp2;
