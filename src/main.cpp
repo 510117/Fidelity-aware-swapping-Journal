@@ -42,7 +42,7 @@ int main(){
     default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.2;
     default_setting["path_length"] = -1;
-    default_setting["min_fidelity"] = 0.9;
+    default_setting["min_fidelity"] = 0.8;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
     default_setting["fidelity_threshold"] = 0.5;
@@ -60,7 +60,7 @@ int main(){
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
     vector<string> X_names = {"request_cnt", "time_limit", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity", "tao"};
-    vector<string> Y_names = {"fidelity_gain", "succ_request_cnt", "utilization"};
+    vector<string> Y_names = {"fidelity_gain", "succ_request_cnt"};
     vector<string> algo_names = {"MyAlgo1", "MyAlgo2", "MyAlgo3", "Merge", "Linear"};
     // init result
 

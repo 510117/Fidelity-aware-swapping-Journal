@@ -280,8 +280,7 @@ void MyAlgo2::run() {
         for(auto P : x[i]) {
             xim_sum += P.second;
             double fidelity = Shape(P.first).get_fidelity(A, B, n, T, tao, graph.get_F_init());
-            if(fidelity < graph.get_fidelity_threshold()) continue;
-            res["fidelity_gain"] += P.second * Shape(P.first).get_fidelity(A, B, n, T, tao, graph.get_F_init());
+            res["fidelity_gain"] += P.second * fidelity;
             res["succ_request_cnt"] += P.second;
 
             for(auto id_mem : P.first) {

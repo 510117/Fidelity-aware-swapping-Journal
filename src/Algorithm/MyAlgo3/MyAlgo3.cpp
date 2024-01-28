@@ -384,8 +384,8 @@ void MyAlgo3::run() {
         
         requests.erase(requests.begin() + best_request);
         graph.reserve_shape(best_shape);
-        update_res();
     }
 
+    update_res();
     cerr << "[" << algorithm_name << "] end" << endl;
 }

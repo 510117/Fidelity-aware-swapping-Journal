@@ -1,10 +1,17 @@
 #include "MyAlgo5.h"
 
-MyAlgo5::MyAlgo5(Graph graph, vector<pair<int, int>> requests, map<SDpair, vector<Path>> paths):
-    AlgorithmBase(graph, requests, paths) {
+MyAlgo5::MyAlgo5(Graph _graph, vector<SDpair> _requests, map<SDpair, vector<Path>> _paths):
+    AlgorithmBase(_graph, _requests, _paths) {
     algorithm_name = "Linear";
     linear_shape.resize(graph.get_num_nodes() + 1);
-    random_shuffle(requests.begin(), requests.end());
+    sort(requests.begin(), requests.end(), [&](SDpair &a, SDpair &b) {
+        return graph.distance(a.first, a.second) > graph.distance(b.first, b.second);
+    });
+    for(SDpair sdpair : requests) {
+        sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
+            return a.size() > b.size();
+        });
+    }
 }
 
 vector<vector<pair<int, int>>> MyAlgo5::recursion_build(int length) {
