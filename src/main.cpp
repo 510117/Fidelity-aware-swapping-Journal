@@ -65,7 +65,7 @@ int main(){
     default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.3;
-    default_setting["path_length"] = 5;
+    default_setting["path_length"] = 4;
     default_setting["min_fidelity"] = 0.9;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
@@ -125,7 +125,7 @@ int main(){
                     length_upper = num_nodes;
                     length_lower = 6;
                 } else {
-                    length_upper = input_parameter["path_length"] + 5;
+                    length_upper = input_parameter["path_length"] + 1;
                     length_lower = input_parameter["path_length"] - 1;
                 }
 
