@@ -19,8 +19,7 @@
 
 using namespace std;
 
-pair<int, int> generate_new_request(int num_of_node){
-    //亂數引擎 
+SDpair generate_new_request(int num_of_node){
     random_device rd;
     default_random_engine generator = default_random_engine(rd());
     uniform_int_distribution<int> unif(0, num_of_node-1);
@@ -30,6 +29,31 @@ pair<int, int> generate_new_request(int num_of_node){
     return make_pair(node1, node2);
 }
 
+vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower, int length_upper) {
+    int n = graph.get_num_nodes();
+    vector<SDpair> cand;
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j < n; j++) {
+            if(i == j) continue;
+            int dist = graph.distance(i, j);
+            if(dist >= length_lower && dist <= length_upper) {
+                cand.emplace_back(i, j);
+            }
+        }
+    }
+
+    while((int)cand.size() < requests_cnt) {
+        cand.emplace_back(generate_new_request(n));
+    }
+
+    random_shuffle(cand.begin(), cand.end());
+
+    while((int)cand.size() > requests_cnt) {
+        cand.pop_back();
+    }
+
+    return cand;
+}
 
 int main(){
     string file_path = "../data/";
@@ -101,7 +125,7 @@ int main(){
                     length_upper = num_nodes;
                     length_lower = 6;
                 } else {
-                    length_upper = input_parameter["path_length"] + 1;
+                    length_upper = input_parameter["path_length"] + 5;
                     length_lower = input_parameter["path_length"] - 1;
                 }
 
@@ -130,19 +154,7 @@ int main(){
                     Graph graph(filename, time_limit, swap_prob, fidelity_threshold, A, B, n, T, tao);
 
                     ofs << "--------------- in round " << r << " -------------" <<endl;
-                    vector<pair<int, int>> requests;
-                    for(int i = 0; i < request_cnt; i++) {
-                        pair<int, int> new_request = generate_new_request(num_nodes);
-                        int len = graph.distance(new_request.first, new_request.second);
-                        int cnt = 1000;
-                        while(len < length_lower || len > length_upper) {
-                            new_request = generate_new_request(num_nodes);
-                            len = graph.distance(new_request.first, new_request.second);
-                            if(cnt == 0) break;
-                            cnt--;
-                        }
-                        requests.push_back(new_request);
-                    }
+                    vector<pair<int, int>> requests = generate_requests(graph, request_cnt, length_lower, length_upper);
 
                     Graph path_graph = graph;
                     path_graph.increase_resources(10);
