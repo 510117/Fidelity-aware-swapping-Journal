@@ -5,6 +5,7 @@
 import sys
 import networkx as nx
 import random
+import numpy
 import math
 from math import ceil
 
@@ -115,7 +116,13 @@ with open(path, 'w') as f:
             e0 = str(e[0])
             e1 = str(e[1])
             dis = RANGE*dist(positions[e[0]], positions[e[1]])  # distance
-            F = random.random()*(max_fidelity-min_fidelity) + min_fidelity  # fidelity
+            # F = random.random()*(max_fidelity-min_fidelity) + min_fidelity  # fidelity
+            ratio = numpy.random.normal(1, 0.5)
+            if ratio > 1:
+                ratio = 1
+            if ratio < 0:
+                ratio = 0
+            F = ratio*(max_fidelity-min_fidelity) + min_fidelity  # fidelity
             prob_e = prob(entangle_lambda, dis)   # entangled probability
             print(e0 + " " + e1 + " " + str(F) + " " + str(prob_e), file=f)
             avg_l += dis
