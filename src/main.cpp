@@ -64,8 +64,6 @@ int main(){
     vector<string> algo_names = {"MyAlgo1", "MyAlgo2", "MyAlgo3", "Merge", "Linear"};
     // init result
 
-    
-
 
     int round = 10;
     vector<PathMethod*> path_methods;
