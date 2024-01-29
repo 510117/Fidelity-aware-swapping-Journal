@@ -191,7 +191,7 @@ void MyAlgo1::run() {
     // alpha(v) = alpha(v)(1 + eps(q / ahpla(v))
     // beta(v, t) = beta(v, t)(1 + eps(q / beta(v, t))
 
-    int round = 2;
+    int round = 1;
     while(round-- && !requests.empty()) {
         variable_initialize();
         while(obj < 1.0) {
