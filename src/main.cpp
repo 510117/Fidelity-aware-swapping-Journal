@@ -32,12 +32,16 @@ SDpair generate_new_request(int num_of_node){
 vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower, int length_upper) {
     int n = graph.get_num_nodes();
     vector<SDpair> cand;
+    random_device rd;
+    default_random_engine generator = default_random_engine(rd());
+    uniform_int_distribution<int> unif(0, 1e9);
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < n; j++) {
             if(i == j) continue;
             int dist = graph.distance(i, j);
             if(dist >= length_lower && dist <= length_upper) {
-                cand.emplace_back(i, j);
+                int cnt = unif(generator) % 5;
+                while(cnt--) cand.emplace_back(i, j);
             }
         }
     }
@@ -63,7 +67,7 @@ int main(){
     default_setting["request_cnt"] = 50;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 7;
-    default_setting["avg_memory"] = 10;
+    default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.5;
     default_setting["path_length"] = 5;
     default_setting["min_fidelity"] = 0.8;
