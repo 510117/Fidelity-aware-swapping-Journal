@@ -65,7 +65,7 @@ int main(){
     default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.3;
-    default_setting["path_length"] = 4;
+    default_setting["path_length"] = 10;
     default_setting["min_fidelity"] = 0.9;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
@@ -77,7 +77,7 @@ int main(){
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["avg_memory"] = {3, 5, 7, 9, 11};
     change_parameter["tao"] = {0.1, 0.3, 0.5, 0.7, 0.9};
-    change_parameter["path_length"] = {11, 13, 15, 17};
+    change_parameter["path_length"] = {3, 6, 9, 12, 15};
     change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8, 0.9}; 
     change_parameter["fidelity_threshold"] = {0.2, 0.4, 0.6, 0.8, 0.9};
     change_parameter["time_limit"] = {3, 5, 7, 9, 11};
