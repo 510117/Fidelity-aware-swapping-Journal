@@ -267,7 +267,7 @@ void MyAlgo1::run() {
         }
 
         sort(shapes.begin(), shapes.end(), [](pair<double, Shape_vector> left, pair<double, Shape_vector> right) {
-            if(fabs(left.first - right.first) >= EPS) return left.first > right.first;
+            return left.first > right.first;
             if(left.second.size() != right.second.size()) return left.second.size() < right.second.size();
             return left.second < right.second;
         });
