@@ -64,7 +64,7 @@ int main(){
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 7;
-    default_setting["tao"] = 1;
+    default_setting["tao"] = 0.5;
     default_setting["path_length"] = 5;
     default_setting["min_fidelity"] = 0.7;
     default_setting["max_fidelity"] = 0.95;
