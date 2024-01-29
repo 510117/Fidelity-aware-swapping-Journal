@@ -40,7 +40,7 @@ vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower
             if(i == j) continue;
             int dist = graph.distance(i, j);
             if(dist >= length_lower && dist <= length_upper) {
-                int cnt = unif(generator) % 5;
+                int cnt = unif(generator) % 3 + 2;
                 while(cnt--) cand.emplace_back(i, j);
             }
         }
