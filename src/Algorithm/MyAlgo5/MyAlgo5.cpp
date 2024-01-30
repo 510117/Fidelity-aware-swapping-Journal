@@ -126,8 +126,16 @@ void MyAlgo5::run() {
             }
         }
     }
-
+    
+    vector<pair<double, Shape_vector>> fidelity_shapes;
     for(Shape_vector shape : shapes) {
+        double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
+        fidelity_shapes.emplace_back(fidelity, shape);
+    }
+
+    sort(fidelity_shapes.begin(), fidelity_shapes.end());
+
+    for(auto [fidelity, shape] : fidelity_shapes) {
         if(graph.check_resource(shape)) {
             graph.reserve_shape(shape);
         }
