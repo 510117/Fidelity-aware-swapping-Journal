@@ -92,11 +92,7 @@ void MyAlgo5::run() {
                             int t = P.first, amount = P.second;
                             if(graph.get_node_memory_at(node, t) < amount) {
                                 isable = false;
-                                if(amount == 2 && graph.get_node_memory_at(node, t) == 1) {
-                                    offest = (t + 1) - max(shape[i].second.front().first, shape[i].second.back().first);
-                                } else {
-                                    offest = (t + 1) - min(shape[i].second.front().first, shape[i].second.back().first);
-                                }
+                                offest = (t + 1) - min(shape[i].second.front().first, shape[i].second.back().first);
                             }
                         }
                     }
