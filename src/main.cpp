@@ -67,9 +67,9 @@ int main(){
     default_setting["request_cnt"] = 50;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 7;
-    default_setting["avg_memory"] = 10;
+    default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.5;
-    default_setting["path_length"] = 6;
+    default_setting["path_length"] = 7;
     default_setting["min_fidelity"] = 0.8;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
@@ -129,7 +129,7 @@ int main(){
                     length_upper = num_nodes;
                     length_lower = 6;
                 } else {
-                    length_upper = input_parameter["path_length"] + 5;
+                    length_upper = input_parameter["path_length"] + 10;
                     length_lower = input_parameter["path_length"] - 1;
                 }
 
