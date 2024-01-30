@@ -123,6 +123,7 @@ void MyAlgo4::run() {
                     best_fidelity = fidelity;
                     best_shape = shape;
                     best_request = i;
+                    break;
                 }
             }
         }
