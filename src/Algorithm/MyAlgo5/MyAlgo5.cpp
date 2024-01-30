@@ -65,6 +65,7 @@ Shape_vector MyAlgo5::build_linear_shape(Path path) {
     return shape;
 }
 void MyAlgo5::run() {
+    vector<Shape_vector> shapes;
     for(int i = 0; i < (int)requests.size(); i++) {
         int src = requests[i].first;
         int dst = requests[i].second;
@@ -120,11 +121,17 @@ void MyAlgo5::run() {
             }
 
             if(find && graph.check_resource(shape)) {
-                graph.reserve_shape(Shape(shape));
-                update_res();
+                shapes.push_back(shape);
                 break;
             }
         }
     }
+
+    for(Shape_vector shape : shapes) {
+        if(graph.check_resource(shape)) {
+            graph.reserve_shape(shape);
+        }
+    }
+    update_res();
     cerr << "[" << algorithm_name << "] end" << endl;
 }
