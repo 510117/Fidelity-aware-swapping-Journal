@@ -72,7 +72,6 @@ void MyAlgo5::run() {
         for(int i = 0; i < (int)requests.size(); i++) {
             int src = requests[i].first;
             int dst = requests[i].second;
-
             vector<Path> paths = get_paths(src, dst);
             for(Path path : paths) {
                 Shape_vector shape = build_linear_shape(path);
@@ -120,7 +119,6 @@ void MyAlgo5::run() {
                         find = true;
                         break;
                     }
-
                 }
 
                 double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
@@ -138,5 +136,7 @@ void MyAlgo5::run() {
         graph.reserve_shape(best_shape);
         requests.erase(requests.begin() + best_request);
     }
+
+    update_res();
     cerr << "[" << algorithm_name << "] end" << endl;
 }
