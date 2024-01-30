@@ -7,11 +7,11 @@ MyAlgo4::MyAlgo4(Graph _graph, vector<SDpair> _requests, map<SDpair, vector<Path
     sort(requests.begin(), requests.end(), [&](SDpair &a, SDpair &b) {
         return graph.distance(a.first, a.second) > graph.distance(b.first, b.second);
     });
-    for(SDpair sdpair : requests) {
-        sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
-            return a.size() > b.size();
-        });
-    }
+    // for(SDpair sdpair : requests) {
+    //     sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
+    //         return a.size() > b.size();
+    //     });
+    // }
 }
 
 vector<vector<pair<int, int>>> MyAlgo4::recursion_build(int length) {
@@ -123,6 +123,7 @@ void MyAlgo4::run() {
                     best_fidelity = fidelity;
                     best_shape = shape;
                     best_request = i;
+                    break;
                 }
             }
         }
