@@ -66,64 +66,77 @@ Shape_vector MyAlgo4::build_merge_shape(vector<int> path) {
     return shape;
 }
 void MyAlgo4::run() {
-    for(int i = 0; i < (int)requests.size(); i++) {
-        int src = requests[i].first;
-        int dst = requests[i].second;
-        vector<Path> paths = get_paths(src, dst);
-        for(Path path : paths) {
-            Shape_vector shape = build_merge_shape(path);
-            bool find = false;
-            while(1) {
-                bool isable = true;
-                int offest = 0;
-                for(int i = 0; i < (int)shape.size(); i++) {
-                    int node = shape[i].first;
-                    map<int, int> need_amount; // time to amount
-                    for(pair<int, int> rng : shape[i].second) {
-                        int left = rng.first, right = rng.second;
-                        for(int t = left; t <= right; t++) {
-                            need_amount[t]++;
+    while(1) {
+        Shape_vector best_shape;
+        double best_fidelity = INF;
+        int best_request = -1;
+        for(int i = 0; i < (int)requests.size(); i++) {
+            int src = requests[i].first;
+            int dst = requests[i].second;
+            vector<Path> paths = get_paths(src, dst);
+            for(Path path : paths) {
+                Shape_vector shape = build_merge_shape(path);
+                bool find = false;
+                while(1) {
+                    bool isable = true;
+                    int offest = 0;
+                    for(int i = 0; i < (int)shape.size(); i++) {
+                        int node = shape[i].first;
+                        map<int, int> need_amount; // time to amount
+                        for(pair<int, int> rng : shape[i].second) {
+                            int left = rng.first, right = rng.second;
+                            for(int t = left; t <= right; t++) {
+                                need_amount[t]++;
+                            }
                         }
-                    }
-                    for(auto P : need_amount) {
-                        int t = P.first, amount = P.second;
-                        if(graph.get_node_memory_at(node, t) < amount) {
-                            isable = false;
-                            if(amount == 2 && graph.get_node_memory_at(node, t) == 1) {
-                                offest = (t + 1) - max(shape[i].second.front().first, shape[i].second.back().first);
-                            } else {
-                                offest = (t + 1) - min(shape[i].second.front().first, shape[i].second.back().first);
+                        for(auto P : need_amount) {
+                            int t = P.first, amount = P.second;
+                            if(graph.get_node_memory_at(node, t) < amount) {
+                                isable = false;
+                                if(amount == 2 && graph.get_node_memory_at(node, t) == 1) {
+                                    offest = (t + 1) - max(shape[i].second.front().first, shape[i].second.back().first);
+                                } else {
+                                    offest = (t + 1) - min(shape[i].second.front().first, shape[i].second.back().first);
+                                }
                             }
                         }
                     }
-                }
 
-                bool cant = false;
-                for(int i = 0; i < (int)shape.size(); i++) {
-                    for(int j = 0; j < (int)shape[i].second.size(); j++) {
-                        shape[i].second[j].first += offest;
-                        shape[i].second[j].second += offest;
+                    bool cant = false;
+                    for(int i = 0; i < (int)shape.size(); i++) {
+                        for(int j = 0; j < (int)shape[i].second.size(); j++) {
+                            shape[i].second[j].first += offest;
+                            shape[i].second[j].second += offest;
 
-                        if(shape[i].second[j].second >= graph.get_time_limit()) {
-                            cant = true;
+                            if(shape[i].second[j].second >= graph.get_time_limit()) {
+                                cant = true;
+                            }
                         }
+                    }
+
+                    if(cant) break;
+
+                    if(isable) {
+                        find = true;
+                        break;
                     }
                 }
 
-                if(cant) break;
-
-                if(isable) {
-                    find = true;
+                double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
+                if(find && graph.check_resource(shape) && best_fidelity > fidelity) {
+                    best_fidelity = fidelity;
+                    best_shape = shape;
                     break;
                 }
             }
-            if(find && graph.check_resource(shape)) {
-                graph.reserve_shape(Shape(shape));
-                update_res();
-                break;
-            }
         }
 
+        if(best_request == -1) break;
+
+        graph.reserve_shape(best_shape);
+        requests.erase(requests.begin() + best_request);
     }
+    
+    update_res();
     cerr << "[" << algorithm_name << "] end" << endl;
 }
