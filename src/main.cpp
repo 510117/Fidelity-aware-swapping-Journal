@@ -73,10 +73,10 @@ int main(){
     default_setting["min_fidelity"] = 0.7;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
-    default_setting["fidelity_threshold"] = 0.5;
+    default_setting["fidelity_threshold"] = 0.6;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["request_cnt"] = {10, 30, 50, 70, 90};
+    change_parameter["request_cnt"] = {10, 20, 30, 40, 50};
     change_parameter["num_nodes"] = {40, 70, 100, 130, 160};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["avg_memory"] = {4, 5, 6, 7, 8};
