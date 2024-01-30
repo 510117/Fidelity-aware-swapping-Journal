@@ -126,6 +126,7 @@ void MyAlgo4::run() {
                 if(find && graph.check_resource(shape) && best_fidelity > fidelity) {
                     best_fidelity = fidelity;
                     best_shape = shape;
+                    best_request = i;
                     break;
                 }
             }
@@ -136,7 +137,7 @@ void MyAlgo4::run() {
         graph.reserve_shape(best_shape);
         requests.erase(requests.begin() + best_request);
     }
-    
+
     update_res();
     cerr << "[" << algorithm_name << "] end" << endl;
 }
