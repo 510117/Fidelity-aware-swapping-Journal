@@ -70,8 +70,8 @@ int main(){
     default_setting["avg_memory"] = 7;
     default_setting["tao"] = 0.5;
     default_setting["path_length"] = 10;
-    default_setting["min_fidelity"] = 0.8;
-    default_setting["max_fidelity"] = 0.95;
+    default_setting["min_fidelity"] = 0.9;
+    default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;
     default_setting["fidelity_threshold"] = 0.5;
 
