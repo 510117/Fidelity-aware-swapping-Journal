@@ -40,23 +40,28 @@ vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower
             if(i == j) continue;
             int dist = graph.distance(i, j);
             if(dist >= length_lower && dist <= length_upper) {
-                int cnt = unif(generator) % 5 + 5;
-                while(cnt--) cand.emplace_back(i, j);
+                cand.emplace_back(i, j);
             }
         }
     }
 
-    while((int)cand.size() < requests_cnt) {
-        cand.emplace_back(generate_new_request(n));
-    }
-
     random_shuffle(cand.begin(), cand.end());
 
-    while((int)cand.size() > requests_cnt) {
-        cand.pop_back();
+    vector<SDpair> requests;
+    for(SDpair sdpair : cand) {
+        int cnt = unif(generator) % 3 + 3;
+        while(cnt--) requests.push_back(sdpair);
     }
 
-    return cand;
+    while((int)requests.size() < requests_cnt) {
+        requests.emplace_back(generate_new_request(n));
+    }
+
+    while((int)requests.size() > requests_cnt) {
+        requests.pop_back();
+    }
+
+    return requests;
 }
 
 int main(){
