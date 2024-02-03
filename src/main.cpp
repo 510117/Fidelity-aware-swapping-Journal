@@ -49,7 +49,7 @@ vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower
 
     vector<SDpair> requests;
     for(SDpair sdpair : cand) {
-        int cnt = unif(generator) % 3 + 3;
+        int cnt = unif(generator) % 4 + 3;
         while(cnt--) requests.push_back(sdpair);
     }
 
