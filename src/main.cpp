@@ -134,7 +134,7 @@ int main(){
                     length_upper = num_nodes;
                     length_lower = 6;
                 } else {
-                    length_upper = input_parameter["path_length"] + 10;
+                    length_upper = input_parameter["path_length"] + 1;
                     length_lower = input_parameter["path_length"] - 1;
                 }
 
