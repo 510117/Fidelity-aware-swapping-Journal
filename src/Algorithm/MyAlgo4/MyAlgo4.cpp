@@ -82,8 +82,8 @@ void MyAlgo4::run() {
             }
             if(!cant && graph.check_resource(shape)) {
                 graph.reserve_shape(shape);
+                break;
             }
-            break;
         }
     }
 
