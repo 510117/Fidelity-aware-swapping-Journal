@@ -98,7 +98,7 @@ void MyAlgo4::run() {
                         }
                     }
 
-                    bool cant = true;
+                    bool cant = false;
                     for(int i = 0; i < (int)shape.size(); i++) {
                         for(int j = 0; j < (int)shape[i].second.size(); j++) {
                             shape[i].second[j].first += offest;
@@ -116,6 +116,8 @@ void MyAlgo4::run() {
                         find = true;
                         break;
                     }
+
+                    break;
                 }
 
                 double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());

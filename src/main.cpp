@@ -172,6 +172,19 @@ int main(){
 
                     new_path_method->build_paths(path_graph, requests);
                     map<SDpair, vector<Path>> paths = new_path_method->get_paths();
+                    map<SDpair, set<Path>> paths_st;
+                    for(auto [sdpair, pathss] : paths) {
+                        for(Path path : pathss) {
+                            paths_st[sdpair].insert(path);
+                        }
+                    }
+
+                    paths.clear();
+                    for(auto [sdpair, pathss] : paths_st) {
+                        for(Path path : pathss) {
+                            paths[sdpair].push_back(path);
+                        }
+                    }
 
                     int path_len = 0, path_cnt = 0, mx_path_len = 0;
 
