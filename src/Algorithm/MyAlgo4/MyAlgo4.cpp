@@ -98,7 +98,7 @@ void MyAlgo4::run() {
                         }
                     }
 
-                    bool cant = false;
+                    bool cant = true;
                     for(int i = 0; i < (int)shape.size(); i++) {
                         for(int j = 0; j < (int)shape[i].second.size(); j++) {
                             shape[i].second[j].first += offest;
