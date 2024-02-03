@@ -66,38 +66,24 @@ Shape_vector MyAlgo4::build_merge_shape(vector<int> path) {
     return shape;
 }
 void MyAlgo4::run() {
-    while(1) {
-        Shape_vector best_shape;
-        double best_fidelity = INF;
-        int best_request = -1;
-        for(int i = 0; i < (int)requests.size(); i++) {
-            int src = requests[i].first;
-            int dst = requests[i].second;
-            vector<Path> paths = get_paths(src, dst);
-            for(Path path : paths) {
-                Shape_vector shape = build_merge_shape(path);
-                bool cant = false;
-                for(int i = 0; i < (int)shape.size(); i++) {
-                    for(int j = 0; j < (int)shape[i].second.size(); j++) {
-                        if(shape[i].second[j].second >= graph.get_time_limit()) {
-                            cant = true;
-                        }
+    for(int i = 0; i < (int)requests.size(); i++) {
+        int src = requests[i].first;
+        int dst = requests[i].second;
+        vector<Path> paths = get_paths(src, dst);
+        for(Path path : paths) {
+            Shape_vector shape = build_merge_shape(path);
+            bool cant = false;
+            for(int i = 0; i < (int)shape.size(); i++) {
+                for(int j = 0; j < (int)shape[i].second.size(); j++) {
+                    if(shape[i].second[j].second >= graph.get_time_limit()) {
+                        cant = true;
                     }
                 }
-                double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
-                if(!cant && graph.check_resource(shape) && best_fidelity > fidelity) {
-                    best_fidelity = fidelity;
-                    best_shape = shape;
-                    best_request = i;
-                    break;
-                }
+            }
+            if(!cant && graph.check_resource(shape)) {
+                graph.reserve_shape(shape);
             }
         }
-
-        if(best_request == -1) break;
-
-        graph.reserve_shape(best_shape);
-        requests.erase(requests.begin() + best_request);
     }
 
     update_res();
