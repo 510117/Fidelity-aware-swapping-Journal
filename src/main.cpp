@@ -40,7 +40,7 @@ vector<SDpair> generate_requests(Graph graph, int requests_cnt, int length_lower
             if(i == j) continue;
             int dist = graph.distance(i, j);
             if(dist >= length_lower && dist <= length_upper) {
-                int cnt = unif(generator) % 10 + 2;
+                int cnt = unif(generator) % 5 + 5;
                 while(cnt--) cand.emplace_back(i, j);
             }
         }
@@ -69,7 +69,7 @@ int main(){
     default_setting["time_limit"] = 6;
     default_setting["avg_memory"] = 9;
     default_setting["tao"] = 0.5;
-    default_setting["path_length"] = 10;
+    default_setting["path_length"] = 7;
     default_setting["min_fidelity"] = 0.8;
     default_setting["max_fidelity"] = 0.97;
     default_setting["swap_prob"] = 0.9;

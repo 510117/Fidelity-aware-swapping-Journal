@@ -90,7 +90,6 @@ void MyAlgo5::run() {
     
     vector<pair<double, Shape_vector>> fidelity_shapes;
 
-    set<SDpair> used;
     for(Shape_vector shape : shapes) {
         double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
         fidelity_shapes.emplace_back(fidelity, shape);
@@ -98,6 +97,7 @@ void MyAlgo5::run() {
 
     sort(fidelity_shapes.begin(), fidelity_shapes.end());
 
+    set<SDpair> used;
     for(auto [fidelity, shape] : fidelity_shapes) {
         int src = shape[0].first, dst = shape.back().first;
         if(used.count({src, dst})) continue;
