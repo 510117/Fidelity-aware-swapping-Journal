@@ -85,14 +85,18 @@ void MyAlgo5::run() {
             if(!cant && graph.check_resource(shape)) {
                 shapes.push_back(shape);
             }
-            break;
         }
     }
     
     vector<pair<double, Shape_vector>> fidelity_shapes;
+
+    set<SDpair> used;
     for(Shape_vector shape : shapes) {
+        int src = shape[0].first, dst = shape.back().first;
+        if(used.count({src, dst})) continue;
         double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
         fidelity_shapes.emplace_back(fidelity, shape);
+        used.insert({src, dst});
     }
 
     sort(fidelity_shapes.begin(), fidelity_shapes.end());
