@@ -73,10 +73,19 @@ void MyAlgo5::run() {
         vector<Path> paths = get_paths(src, dst);
         for(Path path : paths) {
             Shape_vector shape = build_linear_shape(path);
-            if(graph.check_resource(shape)) {
-                shapes.push_back(shape);
-                break;
+            bool cant = false;
+            for(int i = 0; i < (int)shape.size(); i++) {
+                for(int j = 0; j < (int)shape[i].second.size(); j++) {
+                    if(shape[i].second[j].second >= graph.get_time_limit()) {
+                        cant = true;
+                    }
+                }
             }
+
+            if(!cant && graph.check_resource(shape)) {
+                shapes.push_back(shape);
+            }
+            break;
         }
     }
     

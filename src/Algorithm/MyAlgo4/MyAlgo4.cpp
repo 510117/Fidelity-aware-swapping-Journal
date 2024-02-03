@@ -7,11 +7,11 @@ MyAlgo4::MyAlgo4(Graph _graph, vector<SDpair> _requests, map<SDpair, vector<Path
     sort(requests.begin(), requests.end(), [&](SDpair &a, SDpair &b) {
         return graph.distance(a.first, a.second) > graph.distance(b.first, b.second);
     });
-    // for(SDpair sdpair : requests) {
-    //     sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
-    //         return a.size() > b.size();
-    //     });
-    // }
+    for(SDpair sdpair : requests) {
+        sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
+            return a.size() > b.size();
+        });
+    }
 }
 
 vector<vector<pair<int, int>>> MyAlgo4::recursion_build(int length) {
@@ -76,8 +76,16 @@ void MyAlgo4::run() {
             vector<Path> paths = get_paths(src, dst);
             for(Path path : paths) {
                 Shape_vector shape = build_merge_shape(path);
+                bool cant = false;
+                for(int i = 0; i < (int)shape.size(); i++) {
+                    for(int j = 0; j < (int)shape[i].second.size(); j++) {
+                        if(shape[i].second[j].second >= graph.get_time_limit()) {
+                            cant = true;
+                        }
+                    }
+                }
                 double fidelity = Shape(shape).get_fidelity(A, B, n, T, tao, graph.get_F_init());
-                if(graph.check_resource(shape) && best_fidelity > fidelity) {
+                if(!cant && graph.check_resource(shape) && best_fidelity > fidelity) {
                     best_fidelity = fidelity;
                     best_shape = shape;
                     best_request = i;
