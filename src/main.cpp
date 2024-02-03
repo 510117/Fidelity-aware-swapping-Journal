@@ -194,10 +194,10 @@ int main(){
                     int path_len = 0, path_cnt = 0, mx_path_len = 0;
 
                     int has_path = 0;
-                    for(auto P : paths) {
+                    for(SDpair sdpair : requests) {
                         int mi_path_len = INF;
-                        has_path += !P.second.empty();
-                        for(Path path : P.second) {
+                        has_path += !paths[sdpair].empty();
+                        for(Path path : paths[sdpair]) {
                             mi_path_len = min(mi_path_len, (int)path.size());
                             for(int i = 1; i < (int)path.size(); i++) {
                                 assert(graph.adj_set[path[i]].count(path[i - 1]));
