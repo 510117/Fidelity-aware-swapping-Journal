@@ -69,7 +69,7 @@ int main(){
 
     map<string, double> default_setting;
     default_setting["num_nodes"] = 100;
-    default_setting["request_cnt"] = 30;
+    default_setting["request_cnt"] = 50;
     default_setting["area_alpha"] = 0.0005;
     default_setting["time_limit"] = 7;
     default_setting["avg_memory"] = 10;
@@ -81,7 +81,7 @@ int main(){
     default_setting["fidelity_threshold"] = 0.5;
 
     map<string, vector<double>> change_parameter;
-    change_parameter["request_cnt"] = {10, 20, 30, 40, 50};
+    change_parameter["request_cnt"] = {10, 30, 50, 70, 90};
     change_parameter["num_nodes"] = {40, 70, 100, 130, 160};
     change_parameter["min_fidelity"] = {0.5, 0.7, 0.75, 0.85, 0.95};
     change_parameter["avg_memory"] = {6, 8, 10, 12, 14};
