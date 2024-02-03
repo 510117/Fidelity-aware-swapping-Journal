@@ -102,9 +102,9 @@ void MyAlgo5::run() {
     for(auto [fidelity, shape] : fidelity_shapes) {
         int src = shape[0].first, dst = shape.back().first;
         if(used.count({src, dst})) continue;
+        used.insert({src, dst});
         if(graph.check_resource(shape)) {
             graph.reserve_shape(shape);
-            used.insert({src, dst});
         }
     }
     update_res();
