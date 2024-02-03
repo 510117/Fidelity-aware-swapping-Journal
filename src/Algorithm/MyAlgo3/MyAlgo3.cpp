@@ -366,8 +366,8 @@ void MyAlgo3::run() {
             int dst = requests[i].second;
             Shape shape1 = calculate_best_shape(src, dst).first;
             Shape shape2 = calculate_best_shape2(src, dst).first;
-            double cp1 = cp_value(shape1) * INF;
-            double cp2 = cp_value(shape2);
+            double cp1 = cp_value(shape1);
+            double cp2 = cp_value(shape2) * INF;
             if(cp1 > best_cp) {
                 best_request = i;
                 best_shape = shape1;
