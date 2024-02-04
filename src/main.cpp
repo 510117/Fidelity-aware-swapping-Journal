@@ -275,7 +275,6 @@ int main(){
                         }
                         ofs << sum_res[algo_name][Y_name] / round << ' ';
                     }
-                    ofs << sum_has_path / (double)round;
                     ofs << endl;
                     ofs.close();
                 }
