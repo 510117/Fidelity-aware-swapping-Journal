@@ -13,7 +13,7 @@ void MyAlgo1::variable_initialize() {
     // alpha(i) = delta 
     // beta(v, t) = delta / C(v)
 
-    epsilon = (0.999);
+    epsilon = (0.9);
     double m = requests.size() + (double)graph.get_num_nodes() * (double)graph.get_time_limit();
     double delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * m, 1.0 / epsilon));
     obj = m * delta;
@@ -191,7 +191,7 @@ void MyAlgo1::run() {
     // alpha(v) = alpha(v)(1 + eps(q / ahpla(v))
     // beta(v, t) = beta(v, t)(1 + eps(q / beta(v, t))
 
-    int round = 2;
+    int round = 1;
     while(round-- && !requests.empty()) {
         variable_initialize();
         while(obj < 1.0) {
