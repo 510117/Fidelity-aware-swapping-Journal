@@ -220,7 +220,7 @@ void MyAlgo1::run() {
             int request_index = -1;
             for(int i = 0; i < (int)requests.size(); i++) {
                 if(requests[i] == make_pair(shape.front().first, shape.back().first)) {
-                    if(request_index == -1) {
+                    if(request_index == -1 || alpha[request_index] > alpha[request_index]) {
                         request_index = i;
                     }
                 }
