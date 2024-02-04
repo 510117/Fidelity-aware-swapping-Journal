@@ -98,7 +98,7 @@ int main(){
     // init result
 
 
-    int round = 10;
+    int round = 50;
     vector<PathMethod*> path_methods;
     path_methods.emplace_back(new Greedy());
     path_methods.emplace_back(new QCAST());
