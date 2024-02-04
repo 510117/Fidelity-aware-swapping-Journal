@@ -13,7 +13,7 @@ void MyAlgo1::variable_initialize() {
     // alpha(i) = delta 
     // beta(v, t) = delta / C(v)
 
-    epsilon = (0.6);
+    epsilon = (1);
     double m = requests.size() + (double)graph.get_num_nodes() * (double)graph.get_time_limit();
     double delta = (1 + epsilon) * (1.0 / pow((1 + epsilon) * m, 1.0 / epsilon));
     obj = m * delta;
@@ -220,7 +220,7 @@ void MyAlgo1::run() {
             int request_index = -1;
             for(int i = 0; i < (int)requests.size(); i++) {
                 if(requests[i] == make_pair(shape.front().first, shape.back().first)) {
-                    if(request_index == -1 || alpha[request_index] > alpha[request_index]) {
+                    if(request_index == -1 || alpha[request_index] > alpha[i]) {
                         request_index = i;
                     }
                 }
