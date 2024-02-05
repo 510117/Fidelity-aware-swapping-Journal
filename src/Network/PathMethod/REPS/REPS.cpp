@@ -171,30 +171,19 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
         paths.clear();
         flag = false;
 
-        vector<pair<double, Path>> paths;
+        vector<pair<int, Path>> tempPaths;
         for(int i = 0; i < (int)requests.size(); i++){
             int src = requests[i].first, dst = requests[i].second;
             while(true) {
                 tie(path, width) = dijkstra(src, dst, f_plum[i]);
                 if(path.empty() || width <= EPS) break;
-                int width_floor = floor(width);
-                cout << "width = " << width << endl;
-                if(width_floor >= 1) {
-                    reserve_path(path, width_floor);
-                    flag = true;
-                }
                 update_f_plum(path, width, f_plum[i]);
-                paths.emplace_back(width - width_floor, path);
+                tempPaths.emplace_back(width, path);
             }
         }
 
-        sort(paths.rbegin(), paths.rend());
-        for(auto P : paths) {
-            Path path = P.second;
-            if(graph.check_path_resource(path, 1)) {
-                flag = true;
-                reserve_path(path, 1);
-            }
+        for(auto [amount, path] : tempPaths) {
+            reserve_path(amount, path);
         }
         // cout << "call PFT_LP in REPS::path_assignment()" << endl;
         // cout << "call PFT_LP in REPS::path_assignment()--end" << endl;
