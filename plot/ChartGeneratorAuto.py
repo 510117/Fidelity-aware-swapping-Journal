@@ -9,7 +9,7 @@ from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 
 class ChartGenerator:
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
-    def __init__(self, dataName, Xlabel, Ylabel, Xpow, Ypow, Ystart, Yend, Yinterval):
+    def __init__(self, dataName, Xlabel, Ylabel):
         filename = '../data/ans/Greedy_' + dataName
 
         if not os.path.exists(filename):
@@ -117,6 +117,15 @@ class ChartGenerator:
         maxData = 0
         minData = math.inf
 
+        Ypow = 0
+        Xpow = 0
+
+        for i in range(-10, -1, 1):
+            if i == 5:
+                continue
+            if float(x[numOfData - 1]) <= 10 ** i:
+                Xpow = (i - 2)
+
         Ydiv = float(10 ** Ypow)
         Xdiv = float(10 ** Xpow)
         
@@ -124,37 +133,42 @@ class ChartGenerator:
             x[i] = float(x[i]) / Xdiv
 
         for i in range(numOfAlgo):
+            if i == 5:
+                continue
             for j in range(numOfData):
                 y[i][j] = float(y[i][j]) / Ydiv
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
+
+        Yend = math.ceil(maxData)
+        Ystart = 0
+        Yinterval = (Yend - Ystart) / 5
+
+        if maxData > 1.1:
+            Yinterval = int(math.ceil(Yinterval))
+            Yend = int(Yend)
+        else:
+            Yend = 1
+            Ystart = 0
+            Yinterval = 0.2
+
+
         marker = ['x', 'v', 'o', '^', '.']
 
-        Per = [0, 1, 2, 3, 4, 5]
         # for i in range(numOfAlgo - 1, -1, -1):
-        for _ in range(numOfAlgo):
-            i = Per[_]
-            if _ == 5:
+        for i in range(numOfAlgo):
+            if i == 5:
                 continue
-            ax1.plot(x, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, zorder = -_)
+            ax1.plot(x, y[i], color = color[i], lw = 2.5, linestyle = "-", marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, zorder = -i)
         # plt.show()
 
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
         
-        Per_AlgoName = ["FNPR", "UB", "FLTO", "Nesting", "Linear", "Path"]
-        
-        AlgoName = [0] * (numOfAlgo)
-        for _ in range(numOfAlgo):
-            if _ == 5:
-                continue
-            AlgoName[_] = Per_AlgoName[Per[_]]
-        
-        if "tau" in Xlabel:
-            bbox_pos = (0.3, 0.15)
-        else:
-            bbox_pos = (0.7, 0.15)
+        AlgoName = ["FNPR", "UB", "FLTO", "Nesting", "Linear"]
+                
+        bbox_pos = (0.7, 0.15)
         leg = plt.legend(
             AlgoName,
             loc = 10,
@@ -209,7 +223,7 @@ class ChartGenerator:
 if __name__ == "__main__":
     # data檔名 Y軸名稱 X軸名稱 Y軸要除多少(10的多少次方) Y軸起始座標 Y軸終止座標 Y軸座標間的間隔
     # ChartGenerator("numOfnodes_waitingTime.txt", "need #round", "#Request of a round", 0, 0, 25, 5)
-    Xlabels = ["request_cnt", "time_limit", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"]
+    Xlabels = ["request_cnt", "time_limit", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity", "tao"]
     Ylabels = ["fidelity_gain", "succ_request_cnt"]
     # Ylabels = ["fidelity_gain"]
     # vector<string> X_names = {"request_cnt", "time_limit", "fidelity_threshold", "path_length", "avg_memory", "min_fidelity"};
@@ -221,6 +235,7 @@ if __name__ == "__main__":
     LabelsName["avg_memory"] = "Average Memory Limit"
     LabelsName["fidelity_threshold"] = "fidelity threshold"
     LabelsName["path_length"] = "path length"
+    LabelsName["tao"] = "$\\tau$"
     LabelsName["fidelity_gain"] = " Fidelity Sum"
     LabelsName["succ_request_cnt"] = "\#Accepted Requests"
     LabelsName["utilization"] = "Memory Utilization (\%)"
@@ -229,59 +244,4 @@ if __name__ == "__main__":
     for Xlabel in Xlabels:
         for Ylabel in Ylabels:
             dataFileName = Xlabel + '_' + Ylabel + '.ans'
-            if Xlabel == "request_cnt":
-                (Ystart, Yend, Yinternal) = (0, 20, 4)
-            if Xlabel == "time_limit":
-                (Ystart, Yend, Yinternal) = (8, 33, 5)
-            if Xlabel == "fidelity_threshold":
-                (Ystart, Yend, Yinternal) = (5, 35, 6)
-            if Xlabel == "avg_memory":
-                (Ystart, Yend, Yinternal) = (5, 35, 6)
-            ChartGenerator(dataFileName, LabelsName[Xlabel], LabelsName[Ylabel], 0, 0, Ystart, Yend, Yinternal)
-    # Xlabel
-    # 0 #RequestPerRound
-    # 1 totalRequest
-    # 2 #nodes
-    # 3 r
-    # 4 swapProbability
-    # 5 alpha
-    # 6 SocialNetworkDensity
-
-    # Ylabel
-    # 0 algorithmRuntime 
-    # 1 waitingTime
-    # 2 idleTime
-    # 3 usedQubits
-    # 4 temporaryRatio
-
-    # beta = "$\\it{\\beta}$ (# Req. per Time Slot) "
-    # waiting = "Avg. Waiting Time"
-    # swap = "Succ. Prob. of Swap. $\\mathcal{Q(v)}$"
-    # runtime = "Runtime (s)"
-    # ratio = "Temp. Sto. Ratio (%)"
-    # alpha = "$\\it{\\alpha}$ "
-    # timeslot = "Time Slot"
-    # remain = "# Remain. Req."
-    # r = "Max. Sto. Time $\\it{r}$ (# Time Slots)"
-
-
-    # # rpr + waiting
-    # ChartGenerator(getFilename(0, 1), beta, waiting, 0, 0, 0, 15, 3)
-    
-    # # alpha + ratio
-    # # ChartGenerator(getFilename(5, 4), alpha, ratio, -4, -2, 0, 100, 20)
-    
-    # # q + waiting
-    # ChartGenerator(getFilename(4, 1), swap, waiting, 0, 0, 0, 125, 25)
-    
-    # # q + ratio
-    # # ChartGenerator(getFilename(4, 4), swap, ratio, 0, -2, 0, 100, 20)
-
-    # # alpha + waiting
-    # ChartGenerator(getFilename(5, 1), alpha, waiting, -3, 0, 0, 30, 6)
-
-    # # r + waiting
-    # ChartGenerator(getFilename(3, 1), r, waiting, 0, 0, 1.9, 2.4, 0.2)
-    
-    # # timeslot + remain
-    # ChartGenerator("Timeslot_#remainRequest.txt", timeslot, remain + " (%)", 0, -2, 0, 100, 20)
+            ChartGenerator(dataFileName, LabelsName[Xlabel], LabelsName[Ylabel])
