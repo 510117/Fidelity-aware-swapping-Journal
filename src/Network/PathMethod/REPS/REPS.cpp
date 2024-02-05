@@ -15,7 +15,7 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
     f_plum.clear();
     
     //do LP
-    try {      
+    try {
         // Create an environment
         GRBEnv env = GRBEnv(true);
         env.set("OutputFlag", "0");

@@ -1,6 +1,3 @@
-#ifndef __REPS_H
-#define __REPS_H
-
 #include "../PathMethodBase/PathMethod.h"
 #include "gurobi_c++.h"
 
@@ -15,5 +12,3 @@ public:
     ~REPS();
     void build_paths(Graph graph, vector<SDpair> requests);
 };
-
-#endif
