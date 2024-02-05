@@ -175,7 +175,7 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
             int src = requests[i].first, dst = requests[i].second;
             while(true) {
                 tie(path, width) = dijkstra(src, dst, f_plum[i]);
-                if(path.empty() || width >= EPS) break;
+                if(path.empty() || width <= EPS) break;
                 int width_floor = floor(width);
                 if(width_floor >= 1) {
                     reserve_path(path, width_floor);
