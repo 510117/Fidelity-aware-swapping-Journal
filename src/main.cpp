@@ -170,6 +170,7 @@ int main(){
                     PathMethod *new_path_method;
                     if(path_method->get_name() == "Greedy") new_path_method = new Greedy();
                     else if(path_method->get_name() == "QCAST") new_path_method = new QCAST();
+                    else if(path_method->get_name() == "REPS") new_path_method = new REPS();
                     else {
                         cerr << "unknown path method" << endl;
                         assert(false);

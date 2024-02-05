@@ -1,5 +1,5 @@
-#ifndef __GREEDY_H
-#define __GREEDY_H
+#ifndef __QCAST_H
+#define __QCAST_H
 
 #include "../PathMethodBase/PathMethod.h"
 using namespace std;
