@@ -14,8 +14,10 @@
 #include <algorithm>
 #include <utility>
 #include <fstream>
+#include <sstream>
+#include <omp.h>
 
-#define double long double
+// #define double long double
 
 extern bool DEBUG;
 extern double EPS;

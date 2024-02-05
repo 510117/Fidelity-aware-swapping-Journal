@@ -5,7 +5,7 @@ algorithm2 = Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo1_time/MyAlgo1_time.o
 routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Greedy/Greedy.o Network/PathMethod/QCAST/QCAST.o Network/PathMethod/REPS/REPS.o
 gcc_flag = -g -Wall -Wextra -O3 --std=c++17
 
-gurobi_path =/home/oba/danger/gurobi951/linux64
+gurobi_path = /home/oba/danger/gurobi951/linux64
 gurobi_flag = -I/home/oba/danger/gurobi951/linux64/include/ -L/home/oba/danger/gurobi951/linux64/lib/ -lgurobi_c++ -lgurobi95
 
 all: a.out
