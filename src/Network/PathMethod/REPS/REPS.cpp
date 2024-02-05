@@ -9,11 +9,12 @@ REPS::REPS() {
 REPS::~REPS() {}
 
 void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f_plum) {
-    
+
     //return value is store in t_plum and f_plum
     t_plum.clear();
     f_plum.clear();
     
+    cout << "start PFT" << endl;
     //do LP
     try {
         // Create an environment
@@ -146,7 +147,7 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
     } catch(GRBException e) {
         cout << "Error code = " << e.getErrorCode() << endl;
         cout << e.getMessage() << endl;
-    }catch(...) {
+    } catch(...) {
         cout << "Exception during optimization" << endl;
     }
 }
