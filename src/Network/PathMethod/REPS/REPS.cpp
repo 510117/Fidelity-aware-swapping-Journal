@@ -213,7 +213,7 @@ pair<Path, double> REPS::dijkstra(int src, int dst, map<pair<int, int>, double> 
         for(int v : graph.adj_list[cur]) {
             if(f_plum_i[{cur, v}] <= EPS) continue;
             double new_flow = min(flow[cur], f_plum_i[{cur, v}]);
-            if(new_flow[v] <= EPS) continue;
+            if(new_flow <= EPS) continue;
             if(flow[v] < new_flow) {
                 flow[v] = new_flow;
                 pq.push({flow[v], v});
