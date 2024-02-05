@@ -256,10 +256,13 @@ void Graph::reserve_path(Path path) {
     }
 }
 bool Graph::check_path_resource(Path path, int amount) {
+    int src = path[0], dst = path.back();
+    int remain = min(nodes[src].get_memory(), nodes[dst].get_memory());
     for(int node : path) {
-        if(nodes[node].get_memory() < amount) return false;
+        if(node == src || node == dst) continue;
+        remain = min(remain, nodes[node].get_memory() / 2);
     }
-    return true;
+    return remain >= amount;
 }
 
 
