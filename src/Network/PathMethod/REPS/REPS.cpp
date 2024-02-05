@@ -1,4 +1,5 @@
 #include "REPS.h"
+#include "gurobi_c++.h"
 
 
 using namespace std;

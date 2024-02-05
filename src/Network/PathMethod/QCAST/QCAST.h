@@ -1,3 +1,6 @@
+#ifndef __GREEDY_H
+#define __GREEDY_H
+
 #include "../PathMethodBase/PathMethod.h"
 using namespace std;
 
@@ -20,3 +23,5 @@ public:
     ~QCAST();
     void build_paths(Graph graph, vector<SDpair> requests);
 };
+
+#endif
