@@ -14,7 +14,6 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
     t_plum.clear();
     f_plum.clear();
     
-    cout << "start PFT" << endl;
     //do LP
     try {
         // Create an environment
@@ -142,7 +141,6 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
                 }
             }
         }
-        cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
 
     } catch(GRBException e) {
         cout << "Error code = " << e.getErrorCode() << endl;
@@ -166,7 +164,6 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
     vector<int> path;
 
     while(flag){
-        cout << "??" << endl;
         PFT_LP(t_plum, f_plum);
         paths.clear();
         flag = false;
@@ -199,6 +196,7 @@ pair<Path, double> REPS::dijkstra(int src, int dst, map<pair<int, int>, double> 
     flow[src] = INF;
     while(!pq.empty()) {
         int cur = pq.top().second;
+        pq.pop();
         if(vis[cur]) continue;
         vis[cur] = true;
         for(int v : graph.adj_list[cur]) {
