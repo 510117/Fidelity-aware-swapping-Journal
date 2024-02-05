@@ -17,6 +17,7 @@
 #include "Network/PathMethod/Greedy/Greedy.h"
 #include "Network/PathMethod/QCAST/QCAST.h"
 #include "Network/PathMethod/REPS/REPS.h"
+#include "gurobi_c++.h"
 
 using namespace std;
 

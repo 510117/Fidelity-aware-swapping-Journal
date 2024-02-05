@@ -2,6 +2,7 @@
 #define __REPS_H
 
 #include "../PathMethodBase/PathMethod.h"
+#include "gurobi_c++.h"
 
 using namespace std;
 
