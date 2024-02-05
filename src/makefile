@@ -65,7 +65,7 @@ Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathM
 	g++ -c $(gcc_flag) Network/PathMethod/QCAST/QCAST.h Network/PathMethod/QCAST/QCAST.cpp config.h
 	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
 
-Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS.cpp config.h
+Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
 	g++ -c -g -Wall -Wextra -O3 --static Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h -m64 -I$(gurobi_path)/include/  -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 	mv REPS.o Network/PathMethod/REPS/REPS.o
 
