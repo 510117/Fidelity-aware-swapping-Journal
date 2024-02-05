@@ -100,7 +100,7 @@ void MyAlgo5::run() {
 
     set<SDpair> used;
     for(auto P : fidelity_shapes) {
-        Shape shape = P.second;
+        Shape_vector shape = P.second;
         int src = shape[0].first, dst = shape.back().first;
         if(used.count({src, dst})) continue;
         used.insert({src, dst});
