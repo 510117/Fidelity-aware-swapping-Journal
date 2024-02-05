@@ -166,6 +166,7 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
     vector<int> path;
 
     while(flag){
+        cout << "??" << endl;
         PFT_LP(t_plum, f_plum);
         paths.clear();
         flag = false;
@@ -174,10 +175,10 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
         for(int i = 0; i < (int)requests.size(); i++){
             int src = requests[i].first, dst = requests[i].second;
             while(true) {
-                cout << "??" << endl;
                 tie(path, width) = dijkstra(src, dst, f_plum[i]);
                 if(path.empty() || width <= EPS) break;
                 int width_floor = floor(width);
+                cout << "width = " << width << endl;
                 if(width_floor >= 1) {
                     reserve_path(path, width_floor);
                     flag = true;
