@@ -6,7 +6,7 @@ routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Gree
 gcc_flag = -g -Wall -Wextra -O3 --std=c++17
 
 gurobi_path=/home/oba/danger/gurobi951/linux64/
-gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib/ -lgurobi_c++ -lgurobi95 -lm 
+gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 
 all: a.out
 
