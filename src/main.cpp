@@ -16,6 +16,7 @@
 #include "Network/PathMethod/PathMethodBase/PathMethod.h"
 #include "Network/PathMethod/Greedy/Greedy.h"
 #include "Network/PathMethod/QCAST/QCAST.h"
+#include "Network/PathMethod/REPS/REPS.h"
 
 using namespace std;
 
