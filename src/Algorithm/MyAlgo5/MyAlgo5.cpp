@@ -99,7 +99,8 @@ void MyAlgo5::run() {
     sort(fidelity_shapes.begin(), fidelity_shapes.end());
 
     set<SDpair> used;
-    for(auto [fidelity, shape] : fidelity_shapes) {
+    for(auto P : fidelity_shapes) {
+        Shape shape = P.second;
         int src = shape[0].first, dst = shape.back().first;
         if(used.count({src, dst})) continue;
         used.insert({src, dst});
