@@ -39,7 +39,7 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
 
         vector<GRBVar> t;   //ti
         for(int i = 0; i < (int)requests.size(); i++){
-            t.emplace_back(model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "t"+to_string(i)));
+            t.emplace_back(model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "t" + to_string(i)));
         }
 
         map<pair<int, int>, GRBVar> x; //x(u, v)
