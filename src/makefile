@@ -5,8 +5,8 @@ algorithm2 = Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo1_time/MyAlgo1_time.o
 routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Greedy/Greedy.o Network/PathMethod/QCAST/QCAST.o Network/PathMethod/REPS/REPS.o
 gcc_flag = -g -Wall -Wextra -O3 --std=c++17
 
-gurobi_path=/home/oba/danger/gurobi951/linux64
-gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib/ -lgurobi_c++ -lgurobi95 
+gurobi_path =/home/oba/danger/gurobi951/linux64
+gurobi_flag = -I/home/oba/danger/gurobi951/linux64/include/ -L/home/oba/danger/gurobi951/linux64/lib/ -lgurobi_c++ -lgurobi95
 
 all: a.out
 
@@ -14,7 +14,7 @@ runtime: runtime.cpp $(dependency) $(algorithm2) $(routing)
 	g++ -fopenmp $(gcc_flag) runtime.cpp $(dependency) $(algorithm2) -o runtime
 
 a.out: main.cpp $(dependency) $(algorithm) $(routing)
-	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) $(gurobi_flag)
+	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) -I/home/oba/danger/gurobi951/linux64/include/ -L/home/oba/danger/gurobi951/linux64/lib/ -lgurobi_c++ -lgurobi95
 
 cdf: cdf.cpp $(dependency) $(algorithm) $(routing)
 	g++ -fopenmp $(gcc_flag) cdf.cpp $(dependency) $(algorithm) -o cdf
@@ -68,7 +68,7 @@ Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathM
 	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
 
 Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
-	g++ -c --static $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h $(gurobi_flag)
+	g++ -c --static $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h -I/home/oba/danger/gurobi951/linux64/include/ -L/home/oba/danger/gurobi951/linux64/lib/ -lgurobi_c++ -lgurobi95
 	mv REPS.o Network/PathMethod/REPS/REPS.o
 
 Network/PathMethod/PathMethodBase/PathMethod.o: Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
