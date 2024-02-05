@@ -183,7 +183,7 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
         }
 
         for(auto [amount, path] : tempPaths) {
-            reserve_path(amount, path);
+            reserve_path(path, amount);
         }
         // cout << "call PFT_LP in REPS::path_assignment()" << endl;
         // cout << "call PFT_LP in REPS::path_assignment()--end" << endl;
