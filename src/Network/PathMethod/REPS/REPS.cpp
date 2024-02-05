@@ -186,7 +186,7 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
         }
 
         sort(paths.rbegin(), paths.rend());
-        for(auto &[width, path] : paths) {
+        for(auto [width, path] : paths) {
             if(graph.check_path_resource(path, 1)) {
                 flag = true;
                 reserve_path(path, 1);
