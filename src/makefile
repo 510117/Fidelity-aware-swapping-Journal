@@ -6,7 +6,7 @@ routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Gree
 gcc_flag = -g --static -Wall -Wextra -O3 --std=c++17
 
 gurobi_path = /home/oba/danger/gurobi951/linux64
-gurobi_flag = -m64 -I$(gurobi_path)/include/ -L$(gurobi_path)/lib/ -lgurobi_c++ -lgurobi95 -lm 
+gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib/ -lgurobi_c++ -lgurobi95 -lm 
 
 all: a.out
 
@@ -14,7 +14,7 @@ runtime: runtime.cpp $(dependency) $(algorithm2) $(routing)
 	g++ -fopenmp $(gcc_flag) runtime.cpp $(dependency) $(algorithm2) -o runtime
 
 a.out: main.cpp $(dependency) $(algorithm) $(routing)
-	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) $(gurobi_flag)
+	g++ -fopenmp -m64 $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) $(gurobi_flag)
 
 cdf: cdf.cpp $(dependency) $(algorithm) $(routing)
 	g++ -fopenmp $(gcc_flag) cdf.cpp $(dependency) $(algorithm) -o cdf
