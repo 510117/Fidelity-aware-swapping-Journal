@@ -14,7 +14,7 @@ runtime: runtime.cpp $(dependency) $(algorithm2) $(routing)
 	g++ -fopenmp $(gcc_flag) runtime.cpp $(dependency) $(algorithm2) -o runtime
 
 a.out: main.cpp $(dependency) $(algorithm) $(routing)
-	g++ -fopenmp -m64 $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) $(gurobi_flag)
+	g++ -fopenmp $(gcc_flag) main.cpp $(dependency) $(algorithm) $(routing) $(gurobi_flag)
 
 cdf: cdf.cpp $(dependency) $(algorithm) $(routing)
 	g++ -fopenmp $(gcc_flag) cdf.cpp $(dependency) $(algorithm) -o cdf
@@ -68,7 +68,7 @@ Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathM
 	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
 
 Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
-	g++ -c --static $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h $(gurobi_flag)
+	g++ -c --static -m64 $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h $(gurobi_flag)
 	mv REPS.o Network/PathMethod/REPS/REPS.o
 
 Network/PathMethod/PathMethodBase/PathMethod.o: Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
