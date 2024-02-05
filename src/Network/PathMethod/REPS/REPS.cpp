@@ -44,8 +44,8 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
 
         map<pair<int, int>, GRBVar> x; //x(u, v)
         for(int u = 0; u < graph.get_num_nodes(); u++){
-            for(int  v : graph.adj_list[u]) {
-                x[make_pair(u, v)] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "x("+to_string(u)+", "+to_string(v) + ")");
+            for(int v : graph.adj_list[u]) {
+                x[make_pair(u, v)] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "x(" + to_string(u) + ", " + to_string(v) + ")");
             }
         }
 
