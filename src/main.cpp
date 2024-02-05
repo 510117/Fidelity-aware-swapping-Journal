@@ -170,6 +170,7 @@ int main(){
                         assert(false);
                     }
 
+                    cout << "found path" << endl;
                     new_path_method->build_paths(path_graph, requests);
                     map<SDpair, vector<Path>> paths = new_path_method->get_paths();
                     map<SDpair, set<Path>> paths_st;
