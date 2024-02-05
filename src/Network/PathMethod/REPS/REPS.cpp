@@ -15,140 +15,57 @@ void REPS::PFT_LP(vector<double> &t_plum, vector<map<pair<int, int>, double>> &f
     f_plum.clear();
     
     //do LP
-    try {
-        // Create an environment
-        GRBEnv env = GRBEnv(true);
-        env.set("OutputFlag", "0");
-        env.start();
+try {
 
-        // Create an empty model
-        GRBModel model = GRBModel(env);
+    // Create an environment
+    GRBEnv env = GRBEnv(true);
+    env.set("LogFile", "mip1.log");
+    env.start();
 
-        // Create variables
-        
-        
-        vector<map<pair<int, int>, GRBVar>> f(requests.size());    //fi(u, v)
-        for(int i=0;i<(int)requests.size();i++){
-            for(int u = 0; u < graph.get_num_nodes(); u++){
-                for(int v : graph.adj_list[u]){
-                    f[i][make_pair(u, v)] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "f" + to_string(i) + "("+to_string(u)+", "+to_string(v) + ")");
-                }
-            }
+    // Create an empty model
+        vector<map<pair<int, int>, GRBVar>> f(1000);    //fi(u, v)
+    GRBModel model = GRBModel(env);
+    for(int i = 0; i < 100; i++){
+        for(int u = 0; u < 100; u++){
+            for(int v = 0; v < 100; v++){
+                                f[i][make_pair(u, v)] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "f" + to_string(i) + "("+to_string(u)+", "+to_string(v) + ")");
+                        }
         }
-
-
-        vector<GRBVar> t;   //ti
-        for(int i = 0; i < (int)requests.size(); i++){
-            t.emplace_back(model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "t" + to_string(i)));
-        }
-
-        map<pair<int, int>, GRBVar> x; //x(u, v)
-        for(int u = 0; u < graph.get_num_nodes(); u++){
-            for(int v : graph.adj_list[u]) {
-                x[make_pair(u, v)] = model.addVar(0.0, GRB_INFINITY, 0.0, GRB_CONTINUOUS, "x(" + to_string(u) + ", " + to_string(v) + ")");
-            }
-        }
-
-        // Set objective: 
-        // maximize sum(ti)
-        GRBLinExpr expr = 0;
-        for (auto ti : t)
-            expr += ti;
-        
-        model.setObjective(expr, GRB_MAXIMIZE);
-
-        // Add constraint: 1(a) 
-        for(int i=0;i<(int)requests.size();i++){
-            GRBLinExpr expr = 0;
-            int u = requests[i].first;
-            for(int v : graph.adj_list[u]){
-                expr += f[i][make_pair(u, v)];
-                expr -= f[i][make_pair(v, u)];
-            }
-            model.addConstr(expr == t[i], "1a_" + to_string(i));
-        }
-
-        // Add constraint: 1(b) 
-        for(int i=0;i<(int)requests.size();i++){
-            expr = 0;
-            int u = requests[i].second;
-            for(int v : graph.adj_list[u]){
-                expr += f[i][make_pair(u, v)];
-                expr -= f[i][make_pair(v, u)];
-            }
-            model.addConstr(expr == GRBLinExpr(t[i], -1.0), "1b_"+ to_string(i));
-        }
-
-        // Add constraint: 1(c) 
-        for(int i = 0; i < (int)requests.size(); i++){
-            expr = 0;
-            for(int u = 0; u < graph.get_num_nodes();u++){
-                if(u == requests[i].first)continue;
-                if(u == requests[i].second)continue;
-                for(int v : graph.adj_list[u]){
-                    expr += f[i][make_pair(u, v)];
-                    expr -= f[i][make_pair(v, u)];
-                }
-                model.addConstr(expr == 0, "1c(" + to_string(i) + ", " + to_string(u) + ")");
-            }
-        }
-
-        // Add constraint: 1(d) 
-        for(int u = 0; u < graph.get_num_nodes(); u++){
-            for(int v : graph.adj_list[u]){
-                expr = 0;
-                for(int i = 0; i < (int)requests.size(); i++){
-                    expr += f[i][make_pair(u, v)];
-                    expr += f[i][make_pair(v, u)];
-                }
-                double p = graph.get_entangle_succ_prob(u, v);
-                model.addConstr(expr <= (x[make_pair(u, v)] * p), "1d(" + to_string(u) + ", " + to_string(v) + ")");
-            }
-        }
-
-        // Add constraint: 1(e) 
-        // for(int u = 0; u < graph.get_num_nodes(); u++){
-        //     for(int v : graph.adj_list[u]){
-        //         int c = INF;
-        //         model.addConstr(x[make_pair(u, v)] <= c, "1e(" + to_string(u) + ", " + to_string(v) + ")");
-        //     }
-        // }
-
-        // Add constraint: 1(f) 
-        for(int  u = 0; u < graph.get_num_nodes(); u++){
-            expr = 0;
-            int m = graph.get_node_memory(u);
-            for(int v : graph.adj_list[u]){
-                expr += x[make_pair(u, v)];
-            }
-            model.addConstr(expr <= m, "1f(" + to_string(u) + ")");
-        }
-
-        // Optimize model
-        model.optimize();
-
-        //get t
-        for(int i=0;i<(int)requests.size();i++){
-            t_plum.emplace_back(t[i].get(GRB_DoubleAttr_X));
-        }
-
-        //get fi
-        f_plum.resize(requests.size());
-        for(int i = 0; i < (int)requests.size(); i++) {
-            for(int u = 0; u < graph.get_num_nodes(); u++) {
-                for(int v : graph.adj_list[u]) {
-                    f_plum[i][make_pair(u, v)] = f[i][make_pair(u, v)].get(GRB_DoubleAttr_X);
-                }
-            }
-        }
-        cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
-
-    } catch(GRBException e) {
-        cout << "Error code = " << e.getErrorCode() << endl;
-        cout << e.getMessage() << endl;
-    }catch(...) {
-        cout << "Exception during optimization" << endl;
     }
+        GRBLinExpr expr = 0;
+
+    // Create variables
+    GRBVar x = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "x");
+    GRBVar y = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "y");
+    GRBVar z = model.addVar(0.0, 1.0, 0.0, GRB_BINARY, "z");
+
+    // Set objective: maximize x + y + 2 z
+    model.setObjective(x + y + 2 * z, GRB_MAXIMIZE);
+
+    // Add constraint: x + 2 y + 3 z <= 4
+    model.addConstr(x + 2 * y + 3 * z <= 4, "c0");
+
+    // Add constraint: x + y >= 1
+    model.addConstr(x + y >= 1, "c1");
+
+    // Optimize model
+    model.optimize();
+
+    cout << x.get(GRB_StringAttr_VarName) << " "
+         << x.get(GRB_DoubleAttr_X) << endl;
+    cout << y.get(GRB_StringAttr_VarName) << " "
+         << y.get(GRB_DoubleAttr_X) << endl;
+    cout << z.get(GRB_StringAttr_VarName) << " "
+         << z.get(GRB_DoubleAttr_X) << endl;
+
+    cout << "Obj: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
+
+  } catch(GRBException e) {
+    cout << "Error code = " << e.getErrorCode() << endl;
+    cout << e.getMessage() << endl;
+  } catch(...) {
+    cout << "Exception during optimization" << endl;
+  }
 }
 
 void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
