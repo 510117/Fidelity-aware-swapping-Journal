@@ -67,7 +67,7 @@ Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathM
 	g++ -c $(gcc_flag) Network/PathMethod/QCAST/QCAST.h Network/PathMethod/QCAST/QCAST.cpp config.h
 	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
 
-Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
+REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
 	g++ -c $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h $(gurobi_flag)
 
 Network/PathMethod/PathMethodBase/PathMethod.o: Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
