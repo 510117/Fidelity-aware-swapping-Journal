@@ -1,11 +1,11 @@
-gurobi_path=/home/oba/danger/gurobi951/linux64/
+gurobi_path = /home/oba/danger/gurobi951/linux64
 
 dependency = Network/Node/Node.o Network/Shape/Shape.o Network/Graph/Graph.o Algorithm/AlgorithmBase/AlgorithmBase.o config.o
 algorithm = Algorithm/MyAlgo2/MyAlgo2.o Algorithm/MyAlgo1/MyAlgo1.o Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo4/MyAlgo4.o Algorithm/MyAlgo5/MyAlgo5.o
 algorithm2 = Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo1_time/MyAlgo1_time.o
 routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Greedy/Greedy.o Network/PathMethod/QCAST/QCAST.o Network/PathMethod/REPS/REPS.o
 gcc_flag = -g -Wall -Wextra -Os -Ofast --std=c++17
-gurobi_flag = -m64 -I$(gurobi_path)/include/  -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
+gurobi_flag = -m64 -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
 
 all: a.out
 
