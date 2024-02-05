@@ -5,8 +5,8 @@ algorithm2 = Algorithm/MyAlgo3/MyAlgo3.o Algorithm/MyAlgo1_time/MyAlgo1_time.o
 routing = Network/PathMethod/PathMethodBase/PathMethod.o Network/PathMethod/Greedy/Greedy.o Network/PathMethod/QCAST/QCAST.o Network/PathMethod/REPS/REPS.o
 gcc_flag = -g -Wall -Wextra -O3 --std=c++17
 
-gurobi_path=/home/oba/danger/gurobi951/linux64/
-gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib -lgurobi_c++ -lgurobi95 -lm 
+gurobi_path=/home/oba/danger/gurobi951/linux64
+gurobi_flag = -I$(gurobi_path)/include/ -L$(gurobi_path)/lib/ -lgurobi_c++ -lgurobi95 
 
 all: a.out
 
@@ -68,7 +68,7 @@ Network/PathMethod/QCAST/QCAST.o: Network/PathMethod/QCAST/QCAST.h Network/PathM
 	mv QCAST.o Network/PathMethod/QCAST/QCAST.o
 
 Network/PathMethod/REPS/REPS.o: Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h
-	g++ -c --static $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h -m64 $(gurobi_flag)
+	g++ -c $(gcc_flag) Network/PathMethod/REPS/REPS.h Network/PathMethod/REPS/REPS.cpp config.h $(gurobi_flag)
 	mv REPS.o Network/PathMethod/REPS/REPS.o
 
 Network/PathMethod/PathMethodBase/PathMethod.o: Network/PathMethod/PathMethodBase/PathMethod.h Network/PathMethod/PathMethodBase/PathMethod.cpp config.h
