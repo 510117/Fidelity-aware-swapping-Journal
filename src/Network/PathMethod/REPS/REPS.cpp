@@ -160,13 +160,13 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
     //PFT Using Progressive Rounding
     vector<double> t_plum;
     vector<map<pair<int, int>, double>> f_plum;
-    PFT_LP(t_plum, f_plum);
     vector<int> neighbor;
     bool flag = true;
     double width;
     vector<int> path;
 
     while(flag){
+        PFT_LP(t_plum, f_plum);
         paths.clear();
         flag = false;
 
@@ -195,7 +195,6 @@ void REPS::build_paths(Graph _graph, vector<SDpair> _requests) {
             }
         }
         // cout << "call PFT_LP in REPS::path_assignment()" << endl;
-        PFT_LP(t_plum, f_plum);
         // cout << "call PFT_LP in REPS::path_assignment()--end" << endl;
     }
 }
@@ -214,6 +213,7 @@ pair<Path, double> REPS::dijkstra(int src, int dst, map<pair<int, int>, double> 
         for(int v : graph.adj_list[cur]) {
             if(f_plum_i[{cur, v}] <= EPS) continue;
             double new_flow = min(flow[cur], f_plum_i[{cur, v}]);
+            if(new_flow[v] <= EPS) continue;
             if(flow[v] < new_flow) {
                 flow[v] = new_flow;
                 pq.push({flow[v], v});
