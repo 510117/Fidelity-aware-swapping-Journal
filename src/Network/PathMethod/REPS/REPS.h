@@ -5,6 +5,7 @@
 #include <set>
 #include <cmath>
 #include "gurobi_c++.h"
+
 using namespace std;
 
 class REPS : public PathMethod {
