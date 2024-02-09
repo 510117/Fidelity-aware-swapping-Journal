@@ -65,7 +65,7 @@ int main(){
     map<string, double> default_setting;
     default_setting["num_nodes"] = 100;
     default_setting["request_cnt"] = 50;
-    default_setting["area_alpha"] = 0.0005;
+    default_setting["entangle_lambda"] = 0.0005;
     default_setting["time_limit"] = 13;
     default_setting["avg_memory"] = 10;
     default_setting["tao"] = 0.5;
@@ -74,6 +74,31 @@ int main(){
     default_setting["max_fidelity"] = 0.98;
     default_setting["swap_prob"] = 0.9;
     default_setting["fidelity_threshold"] = 0.5;
+
+    vector<SDpair> default_requests;
+    string filename = "graph" + round_str + ".input";
+    {
+        int num_nodes = default_setting["num_nodes"];
+        int avg_memory = default_setting["avg_memory"];
+        int request_cnt = default_setting["request_cnt"];
+        int time_limit = default_setting["time_limit"];
+        double min_fidelity = default_setting["min_fidelity"];
+        double max_fidelity = default_setting["max_fidelity"];
+        double entangle_lambda = default_setting["entangle_lambda"];
+        double swap_prob = default_setting["swap_prob"];
+        double fidelity_threshold = default_setting["fidelity_threshold"];
+        int length_upper = default_setting["path_length"] + 1;
+        int length_lower = default_setting["path_length"] - 1;
+        string command = "python3 graph_generator.py ";
+        string parameter = to_string(num_nodes) + " " + to_string(entangle_lambda);
+        if(system((command + filename + " " + parameter).c_str()) != 0){
+            cerr<<"error:\tsystem proccess python error"<<endl;
+            exit(1);
+        }
+        Graph graph(filename, time_limit, swap_prob, avg_memory, min_fidelity, max_fidelity, fidelity_threshold, A, B, n, T, tao);
+        default_requests = generate_requests(graph, 100, length_lower, length_upper);
+    }
+
 
     map<string, vector<double>> change_parameter;
     change_parameter["request_cnt"] = {10, 30, 50, 70, 90};
@@ -93,7 +118,7 @@ int main(){
     // init result
 
 
-    int round = 50;
+    int round = 1;
     vector<PathMethod*> path_methods;
     path_methods.emplace_back(new REPS());
     for(PathMethod *path_method : path_methods) {
@@ -114,13 +139,11 @@ int main(){
 
                 int num_nodes = input_parameter["num_nodes"];
                 int avg_memory = input_parameter["avg_memory"];
-                int memory_up = avg_memory + 1;
-                int memory_lb = avg_memory - 1;
                 int request_cnt = input_parameter["request_cnt"];
                 int time_limit = input_parameter["time_limit"];
                 double min_fidelity = input_parameter["min_fidelity"];
                 double max_fidelity = input_parameter["max_fidelity"];
-                double area_alpha = input_parameter["area_alpha"];
+                double entangle_lambda = input_parameter["entangle_lambda"];
                 double swap_prob = input_parameter["swap_prob"];
                 double fidelity_threshold = input_parameter["fidelity_threshold"];
                 int length_upper, length_lower;
@@ -144,20 +167,18 @@ int main(){
                     cerr  << "時間 " << dt << endl << endl;
                     ofs << "時間 " << dt << endl << endl;
 
-                    string filename = file_path + "input/round_" + round_str + ".input";
-                    string command = "python3 graph_generator.py ";
-                    string parameter = to_string(num_nodes) + " " + to_string(memory_lb) + " " + to_string(memory_up) + " " + " " + to_string(min_fidelity) + " " + to_string(max_fidelity) + " " + to_string(area_alpha);
-                    if(system((command + filename + " " + parameter).c_str()) != 0){
-                        cerr<<"error:\tsystem proccess python error"<<endl;
-                        exit(1);
-                    }
+
+
 
                     double A = 0.25, B = 0.75, tao = input_parameter["tao"], T = 10, n = 2;
 
-                    Graph graph(filename, time_limit, swap_prob, fidelity_threshold, A, B, n, T, tao);
+                    Graph graph(filename, time_limit, swap_prob, avg_memory, min_fidelity, max_fidelity, fidelity_threshold, A, B, n, T, tao);
 
                     ofs << "--------------- in round " << r << " -------------" <<endl;
-                    vector<pair<int, int>> requests = generate_requests(graph, request_cnt, length_lower, length_upper);
+                    vector<pair<int, int>> requests;
+                    for(int i = 0; i < request_cnt; i++) {
+                        request_cnt.emplace_back(default_requests[i]);
+                    }
 
                     Graph path_graph = graph;
                     path_graph.increase_resources(10);

@@ -4,9 +4,6 @@ MyAlgo5::MyAlgo5(Graph _graph, vector<SDpair> _requests, map<SDpair, vector<Path
     AlgorithmBase(_graph, _requests, _paths) {
     algorithm_name = "Linear";
     linear_shape.resize(graph.get_num_nodes() + 1);
-    sort(requests.begin(), requests.end(), [&](SDpair &a, SDpair &b) {
-        return graph.distance(a.first, a.second) > graph.distance(b.first, b.second);
-    });
     for(SDpair sdpair : requests) {
         sort(paths[sdpair].begin(), paths[sdpair].end(), [](Path &a, Path &b) {
             return a.size() > b.size();

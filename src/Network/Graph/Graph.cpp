@@ -8,7 +8,7 @@ int rnd(int lower_bound, int upper_bound) {
     return unif(generator) % (upper_bound - lower_bound + 1) + lower_bound;
 }
 
-Graph::Graph(string filename, int _time_limit, double _swap_prob, double _fidelity_threshold, double _A, double _B, double _n, double _T, double _tao):
+Graph::Graph(string filename, int _time_limit, double _swap_prob, double avg_memory, double min_fidelity, double max_fidelity, double _fidelity_threshold, double _A, double _B, double _n, double _T, double _tao):
     time_limit(_time_limit), fidelity_threshold(_fidelity_threshold), A(_A), B(_B), n(_n), T(_T), tao(_tao), fidelity_gain(0), usage(0), succ_request_cnt(0) {
     // geneator an adj list
 
@@ -24,6 +24,7 @@ Graph::Graph(string filename, int _time_limit, double _swap_prob, double _fideli
         int memory_rand;
         double swap_prob = _swap_prob;
         graph_file >> memory_rand;
+        memory_rand += avg_memory;
         nodes.push_back(Node(id, memory_rand, time_limit, swap_prob));
     }
     
@@ -34,6 +35,7 @@ Graph::Graph(string filename, int _time_limit, double _swap_prob, double _fideli
         double f_init, entangle_prob;
         graph_file >> v >> u >> f_init >> entangle_prob;
         assert(v != u);
+        f_init = (f_init) * (max_fidelity - min_fidelity) + min_fidelity;
         adj_list[v].push_back(u);
         adj_list[u].push_back(v);
         F_init[{v, u}] = f_init;

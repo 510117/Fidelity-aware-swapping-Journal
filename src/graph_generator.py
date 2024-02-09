@@ -51,18 +51,18 @@ if len(sys.argv) <= 7:
 
 filename = sys.argv[1]
 num_of_node = int(sys.argv[2])
-min_memory_cnt = int(sys.argv[3])
-max_memory_cnt = int(sys.argv[4])
-min_fidelity = float(sys.argv[5])
-max_fidelity = float(sys.argv[6])
-entangle_lambda = float(sys.argv[7])
+# min_memory_cnt = int(sys.argv[3])
+# max_memory_cnt = int(sys.argv[4])
+# min_fidelity = float(sys.argv[5])
+# max_fidelity = float(sys.argv[6])
+entangle_lambda = float(sys.argv[3])
 
 print("======== generating graph ========", file=sys.stderr)
 print("======== generating graph ========\n")
 print("filename =", filename, file=sys.stderr)
 print("num_of_node =", num_of_node, file=sys.stderr)
-print("min_fidelity =", min_fidelity, ", max_fidelity =", max_fidelity, file=sys.stderr)
-print("min_memory_cnt =", min_memory_cnt, ", max_memory_cnt =", max_memory_cnt, file=sys.stderr)
+# print("min_fidelity =", min_fidelity, ", max_fidelity =", max_fidelity, file=sys.stderr)
+# print("min_memory_cnt =", min_memory_cnt, ", max_memory_cnt =", max_memory_cnt, file=sys.stderr)
 
 while True:
     G = nx.waxman_graph(num_of_node, beta=0.85, alpha=0.03, domain=(0, 0, 0.5, 1))
@@ -101,7 +101,7 @@ with open(path, 'w') as f:
         (x, y) = positions[n]
         pos_x = str(x*RANGE)
         pos_y = str(y*RANGE)
-        num_of_memory = str(ceil(random.random() * (max_memory_cnt-min_memory_cnt)) + min_memory_cnt)
+        num_of_memory = random.randint(-1, 1)
         print(num_of_memory, file = f)
     
     # write edge
@@ -124,7 +124,7 @@ with open(path, 'w') as f:
                 ratio = 1
             if ratio < 0:
                 ratio = 0
-            F = ratio*(max_fidelity-min_fidelity) + min_fidelity  # fidelity
+            F = ratio
             prob_e = prob(entangle_lambda, dis)   # entangled probability
             print(e0 + " " + e1 + " " + str(F) + " " + str(prob_e), file=f)
             avg_l += dis
