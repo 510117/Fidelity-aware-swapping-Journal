@@ -76,7 +76,7 @@ int main(){
     default_setting["fidelity_threshold"] = 0.5;
 
     vector<SDpair> default_requests;
-    string filename = "graph" + round_str + ".input";
+    string filename = "graph.input";
     {
         int num_nodes = default_setting["num_nodes"];
         int avg_memory = default_setting["avg_memory"];
@@ -91,6 +91,7 @@ int main(){
         int length_lower = default_setting["path_length"] - 1;
         string command = "python3 graph_generator.py ";
         string parameter = to_string(num_nodes) + " " + to_string(entangle_lambda);
+        double A = 0.25, B = 0.75, tao = default_setting["tao"], T = 10, n = 2;
         if(system((command + filename + " " + parameter).c_str()) != 0){
             cerr<<"error:\tsystem proccess python error"<<endl;
             exit(1);
