@@ -45,9 +45,9 @@ def dist(p1, p2):
 def prob(a, l):
     return math.exp(-a*l)
 
-if len(sys.argv) <= 7:
-        print("missing argv")
-        sys.exit()
+if len(sys.argv) <= 3:
+    print("missing argv")
+    sys.exit()
 
 filename = sys.argv[1]
 num_of_node = int(sys.argv[2])
