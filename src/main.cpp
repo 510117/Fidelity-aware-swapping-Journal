@@ -80,7 +80,7 @@ int main(){
     {
         int num_nodes = default_setting["num_nodes"];
         int avg_memory = default_setting["avg_memory"];
-        int request_cnt = default_setting["request_cnt"];
+        // int request_cnt = default_setting["request_cnt"];
         int time_limit = default_setting["time_limit"];
         double min_fidelity = default_setting["min_fidelity"];
         double max_fidelity = default_setting["max_fidelity"];
@@ -144,7 +144,7 @@ int main(){
                 int time_limit = input_parameter["time_limit"];
                 double min_fidelity = input_parameter["min_fidelity"];
                 double max_fidelity = input_parameter["max_fidelity"];
-                double entangle_lambda = input_parameter["entangle_lambda"];
+                // double entangle_lambda = input_parameter["entangle_lambda"];
                 double swap_prob = input_parameter["swap_prob"];
                 double fidelity_threshold = input_parameter["fidelity_threshold"];
                 int length_upper, length_lower;
@@ -178,7 +178,7 @@ int main(){
                     ofs << "--------------- in round " << r << " -------------" <<endl;
                     vector<pair<int, int>> requests;
                     for(int i = 0; i < request_cnt; i++) {
-                        request_cnt.emplace_back(default_requests[i]);
+                        requests.emplace_back(default_requests[i]);
                     }
 
                     Graph path_graph = graph;
