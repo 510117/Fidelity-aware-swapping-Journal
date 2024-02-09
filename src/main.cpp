@@ -121,6 +121,8 @@ int main(){
 
     int round = 1;
     vector<PathMethod*> path_methods;
+    path_methods.emplace_back(new Greedy());
+    path_methods.emplace_back(new QCAST());
     path_methods.emplace_back(new REPS());
     for(PathMethod *path_method : path_methods) {
 
