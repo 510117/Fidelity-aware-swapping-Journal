@@ -147,14 +147,14 @@ int main(){
                 // double entangle_lambda = input_parameter["entangle_lambda"];
                 double swap_prob = input_parameter["swap_prob"];
                 double fidelity_threshold = input_parameter["fidelity_threshold"];
-                int length_upper, length_lower;
-                if(input_parameter["path_length"] == -1) {
-                    length_upper = num_nodes;
-                    length_lower = 6;
-                } else {
-                    length_upper = input_parameter["path_length"] + 1;
-                    length_lower = input_parameter["path_length"] - 1;
-                }
+                // int length_upper, length_lower;
+                // if(input_parameter["path_length"] == -1) {
+                //     length_upper = num_nodes;
+                //     length_lower = 6;
+                // } else {
+                //     length_upper = input_parameter["path_length"] + 1;
+                //     length_lower = input_parameter["path_length"] - 1;
+                // }
 
                 int sum_has_path = 0;
                 #pragma omp parallel for
