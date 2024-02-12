@@ -123,7 +123,6 @@ int main(){
     // init result
 
 
-    int round = 50;
     vector<PathMethod*> path_methods;
     path_methods.emplace_back(new Greedy());
     path_methods.emplace_back(new QCAST());
@@ -167,7 +166,7 @@ int main(){
                 for(int r = 0; r < round; r++){
                     string filename = file_path + "input/round_" + to_string(r) + ".input";
                     ofstream ofs;
-                    ofs.open(file_path + "log/" + path_method->get_name() + "_" + X_name + "_in_" + to_string(change_value) + "_Round_" + round_str + ".log");
+                    ofs.open(file_path + "log/" + path_method->get_name() + "_" + X_name + "_in_" + to_string(change_value) + "_Round_" + to_string(r) + ".log");
 
                     time_t now = time(0);
                     char* dt = ctime(&now);
