@@ -237,7 +237,6 @@ void MyAlgo2::run() {
             }
         }
 
-        // cerr << "[MyAlgo1] obj = " << obj << endl;
     }
 
     vector<pair<double, Shape_vector>> shapes;
@@ -282,7 +281,7 @@ void MyAlgo2::run() {
         for(auto P : x[i]) {
             xim_sum += P.second;
             double fidelity = Shape(P.first).get_fidelity(A, B, n, T, tao, graph.get_F_init());
-            fidelity = ((1 + fidelity) / 2);
+            fidelity = ((1.0 + fidelity * 9.0) / 10.0);
             if(fidelity > graph.get_fidelity_threshold()) {
                 res["fidelity_gain"] += P.second * ((1 + fidelity) / 2);
                 res["succ_request_cnt"] += P.second;
