@@ -75,9 +75,11 @@ int main(){
     default_setting["swap_prob"] = 0.9;
     default_setting["fidelity_threshold"] = 0.5;
 
-    vector<SDpair> default_requests;
-    string filename = "graph.input";
-    {
+
+    int round = 50;
+    vector<vector<SDpair>> default_requests(round);
+
+    for(int r = 0; r < round; r++) {
         int num_nodes = default_setting["num_nodes"];
         int avg_memory = default_setting["avg_memory"];
         // int request_cnt = default_setting["request_cnt"];
@@ -89,6 +91,8 @@ int main(){
         double fidelity_threshold = default_setting["fidelity_threshold"];
         int length_upper = default_setting["path_length"] + 1;
         int length_lower = default_setting["path_length"] - 1;
+
+        string filename = file_path + "input/round_" + to_string(r) + ".input";
         string command = "python3 graph_generator.py ";
         string parameter = to_string(num_nodes) + " " + to_string(entangle_lambda);
         double A = 0.25, B = 0.75, tao = default_setting["tao"], T = 10, n = 2;
@@ -97,7 +101,7 @@ int main(){
             exit(1);
         }
         Graph graph(filename, time_limit, swap_prob, avg_memory, min_fidelity, max_fidelity, fidelity_threshold, A, B, n, T, tao);
-        default_requests = generate_requests(graph, 100, length_lower, length_upper);
+        default_requests[r] = generate_requests(graph, 100, length_lower, length_upper);
     }
 
 
@@ -119,7 +123,7 @@ int main(){
     // init result
 
 
-    int round = 1;
+    int round = 50;
     vector<PathMethod*> path_methods;
     path_methods.emplace_back(new Greedy());
     path_methods.emplace_back(new QCAST());
@@ -161,7 +165,7 @@ int main(){
                 int sum_has_path = 0;
                 #pragma omp parallel for
                 for(int r = 0; r < round; r++){
-                    string round_str = to_string(r);
+                    string filename = file_path + "input/round_" + to_string(r) + ".input";
                     ofstream ofs;
                     ofs.open(file_path + "log/" + path_method->get_name() + "_" + X_name + "_in_" + to_string(change_value) + "_Round_" + round_str + ".log");
 
@@ -180,7 +184,7 @@ int main(){
                     ofs << "--------------- in round " << r << " -------------" <<endl;
                     vector<pair<int, int>> requests;
                     for(int i = 0; i < request_cnt; i++) {
-                        requests.emplace_back(default_requests[i]);
+                        requests.emplace_back(default_requests[r][i]);
                     }
 
                     Graph path_graph = graph;
