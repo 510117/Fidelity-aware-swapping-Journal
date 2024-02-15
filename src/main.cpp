@@ -113,7 +113,7 @@ int main(){
     change_parameter["tao"] = {0.3, 0.4, 0.5, 0.6, 0.7};
     change_parameter["path_length"] = {3, 6, 9, 12, 15};
     change_parameter["swap_prob"] = {0.5, 0.6, 0.7, 0.8, 0.9};
-    change_parameter["fidelity_threshold"] = {0.2, 0.4, 0.6, 0.8, 0.9};
+    change_parameter["fidelity_threshold"] = {0.4, 0.45, 0.5, 0.55, 0.6};
     change_parameter["time_limit"] = {5, 9, 13, 17, 21};
 
     // vector<string> X_names = {"time_limit", "request_cnt", "num_nodes", "avg_memory", "tao"};
